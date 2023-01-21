@@ -31,10 +31,17 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/dotenv',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
   ],
-
+  // env: {
+  //   API_URL: process.env.FRONT_API_URL,
+  //   host: process.env.HOST,
+  //   user: process.env.USER,
+  //   password: process.env.PASSWORD,
+  //   database: process.env.DATABASE
+  // },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
@@ -42,5 +49,7 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['axios']
+  },
 }
