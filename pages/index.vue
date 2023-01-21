@@ -1,5 +1,6 @@
 <template>
-  <Tutorial />
+  <!-- <Tutorial /> -->
+  <p>ABC</p>
 </template>
 
 <script lang="ts">
