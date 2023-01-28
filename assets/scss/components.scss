@@ -1,0 +1,8 @@
+@import "../scss/mixins.scss";
+
+.component{
+  color: red;
+  @include mq-max(){
+    color: aqua;
+  }
+}
