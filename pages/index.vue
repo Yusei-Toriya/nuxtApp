@@ -1,24 +1,21 @@
 <template>
-  <div class="container">
-    <div>
-      <h1>Auth認証アプリケーション</h1>
-      <p>ログイン状態：{{$auth.loggedIn}}</p>
-      <div>
-        <nav>
-          <nuxt-link to="/login">Login</nuxt-link>
-        </nav>
-        <nav>
-          <nuxt-link to="/register">新規登録</nuxt-link>
-        </nav>
-        <RouterbackButton />
-      </div>
-      <div v-if="$auth.loggedIn">
+  <section class="l-sec">
+    <div class="l-sec_in">
+      <div class="p-wrapper">
+        <h1>メモ帳アプリ</h1>
         <div>
-          <button @click="$auth.logout()">Logout</button>
+          <p>アカウントをお持ちの方はこちらからログイン</p>
+          <nav>
+            <nuxt-link to="/login">Login</nuxt-link>
+          </nav>
+          <p>新規登録はこちら</p>
+          <nav>
+            <nuxt-link to="/register">新規登録</nuxt-link>
+          </nav>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

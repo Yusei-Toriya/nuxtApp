@@ -21,7 +21,7 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    { src: 'assets/scss/common.scss' },
+    { src: '~/assets/scss/common.scss' },
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -50,22 +50,20 @@ export default {
   ],
   styleResources: {
     scss: [
-      'assets/scss/variable.scss',
-      'assets/scss/layouts.scss',
-      'assets/scss/project.scss',
-      'assets/scss/pages.scss',
-      'assets/scss/components.scss',
-      'assets/scss/pages.scss',
-      'assets/scss/mixins.scss',
+      'assets/scss/_base.scss',
+      'assets/scss/_common.scss',
+      'assets/scss/_components.scss',
+      'assets/scss/_fonts.scss',
+      'assets/scss/_layout.scss',
+      'assets/scss/_mixin.scss',
+      'assets/scss/_pages.scss',
+      'assets/scss/_project.scss',
+      'assets/scss/_reset.scss',
+      'assets/scss/_setting.scss',
+      'assets/scss/_utility.scss',
+      'assets/scss/_variables.scss',
     ],
   },
-  // env: {
-  //   API_URL: process.env.FRONT_API_URL,
-  //   host: process.env.HOST,
-  //   user: process.env.USER,
-  //   password: process.env.PASSWORD,
-  //   database: process.env.DATABASE
-  // },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
   axios: {
@@ -94,17 +92,17 @@ export default {
             method: "get",
             propertyName: "user",
           },
-          // delete: {
-          //   url: "/auth/delete",
-          //   method: "post",
-          //   // propertyName: "",
-          // },
-
+          memo: {
+            url: "/auth/memo",
+            method: "get",
+            propertyName: "memo",
+          },
+          createMemo: {
+            url: "/memo/register",
+            method: "post",
+            propertyName: "memo",
+          },
         },
-        // user: {
-        //   property: 'user',
-        //   // autoFetch: true
-        // },
       },
       tokenRequired: true,
       tokenType: 'bearer'

@@ -111,15 +111,8 @@ app.post("/auth/login", function (req: any, res: any, next: any) {
   const inputEmail = req.body.email;
   const inputPassword = req.body.password;
   const select = 'select * from users where email = ?'
-  // const params = [req.body.email]
-
-  // console.log("params↓");
-  // console.log(params);
-
   connectionInfo.query(select, inputEmail, function (error: any, user: any){
-    // console.log("user↓")
-    // console.log(user[0].email)
-    // console.log(user[0].password)
+    console.log(user)
     if (error) {
       res.status(400).json({
         status: "400 Bad Request",
@@ -131,29 +124,20 @@ app.post("/auth/login", function (req: any, res: any, next: any) {
         message: "email not found",
       });
     }
-    
     bcrypt.compare(inputPassword, user[0].password, function (error: any, results: any) {
-      // console.log('aaaaaaaaaaa');
-      // console.log(user[0].password)
-      // console.log(inputPassword)
       if (error) {
         return res.status(400).json({
           error: error.message,
         });
       }
-      // console.log('bbbbbbbbbbbbbbbb');
-      // console.log(results);
       if (!results) {
         return res.json({
           message: "password is not correct",
         });
       }
-      // console.log('cccccccccccc');
-      // console.log("results.id↓"); //追記
-      // console.log(results); //追記
       //Tokenの発行
       const payload = {
-        id: user[0].id,
+        id: user[0].user_id,
         name: user[0].name,
         email: user[0].email,
       };
@@ -165,8 +149,6 @@ app.post("/auth/login", function (req: any, res: any, next: any) {
 
 //Token確認
 app.get("/auth/user", (req: any, res: any) => {
-  // const headers = req.headers;
-  // return console.log(headers)
   const bearToken = req.headers["authorization"];
   const bearer = bearToken.split(" ");
   const token = bearer[1];
@@ -180,6 +162,69 @@ app.get("/auth/user", (req: any, res: any) => {
     }
   });
 });
+
+app.get("/auth/memo", function (req: any, res: any, next: any) {
+  const bearToken = req.headers["authorization"];
+  const bearer = bearToken.split(" ");
+  const token = bearer[1];
+  const decodedToken = jwt.verify(token,'secret');
+  const user_id = decodedToken.id;
+  const select = 'SELECT memo_title, memo_detail FROM memo WHERE user_id = ?'
+  connectionInfo.query(select, user_id, function (error: any, results: any) {
+    if (error) {
+      throw error;
+    }
+    // console.log(results[0].memo_title)
+    // const memo = []
+    // memo[0] = results[0].memo_title
+    // memo[1] = results[0].memo_detail
+    return res.status(200).json({
+      results
+    });
+  });
+  // const decodedToken = jwt.verify(token,'secret',(err: any, user: any)=>{
+  //   if(err){
+  //     return res.sendStatus(403)
+  //   }else{
+  //     // const decoded = jwt.verify(token, "secret");
+  //     const user_id = decodedToken.id;
+  //     const select = 'select * from memo where user_id = ?'
+  //     connectionInfo.query(select, user_id, function (error: any, results: any) {
+  //       if (error) {
+  //         throw error;
+  //       }
+  //       return res.status(200).json({
+  //         results
+  //       });
+  //     });
+  //   }
+  // });
+});
+
+// メモ新規作成
+app.post("/memo/register", function (req: any, res: any, user: any) {
+  const bearToken = req.headers["authorization"];
+  const bearer = bearToken.split(" ");
+  const token = bearer[1];
+  const decodedToken = jwt.verify(token,'secret');
+  const user_id = decodedToken.id;
+  // const user_id = user[0].id;
+  const memo_title = req.body.memo_title;
+  const memo_detail = req.body.memo_detail;
+  const del_flg = 0;
+  const insert = 'INSERT INTO MEMO (user_id, memo_title, memo_detail, del_flg) VALUES (?,?,?,?)'
+  connectionInfo.query(insert, [user_id, memo_title, memo_detail, del_flg],(err: any) => {
+    if (err) {
+      return res.status(400).json({"error":err.message});
+    }
+    return res.json({
+      "message": "メモの登録に成功しました",
+      "data": [req.body.memo_title, req.body.memo_detail]
+    })
+  })
+});
+// メモ編集
+// メモ削除
 
 app.listen(port, () => { console.log(`${port}番のポートで待機中です...`);})
 

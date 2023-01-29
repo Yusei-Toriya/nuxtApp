@@ -1,0 +1,41 @@
+@charset "UTF-8";
+/* ===================================
+Foundation
+=================================== */
+@import "~/assets/scss/setting.scss.scss";
+@import "~/assets/scss/mixin.scss";
+@import "~/assets/scss/fonts.scss";
+@import "~/assets/scss/reset.scss";
+@import "~/assets/scss/base.scss";
+
+
+/* ===================================
+Layout
+=================================== */
+@import "~/assets/scss/layout.scss";
+
+
+/* ===================================
+Object
+=================================== */
+/* -----------------------------------
+Component
+------------------------------------ */
+@import "~/assets/scss/component.scss";
+
+/* -----------------------------------
+Project
+------------------------------------ */
+@import "~/assets/scss/project.scss";
+
+
+/* -----------------------------------
+Utility
+------------------------------------ */
+@import "~/assets/scss/utility.scss";
+
+/* -----------------------------------
+Page
+------------------------------------ */
+@import "~/assets/scss/page.scss";
+
