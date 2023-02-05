@@ -302,7 +302,7 @@ app.post("/memo/deleteMemo", function (req: any, res: any, user: any) {
   // const memo_detail: string = req.body.memo_detail;
   // const del_flg: number = 0;
   const update: string = 'UPDATE memo SET del_flg = 1 WHERE memo_id = ? AND user_id = ?';
-  connectionInfo.query(update, memo_id, user_id, (err: any) => {
+  connectionInfo.query(update, [memo_id, user_id], (err: any) => {
     if (err) {
       return res.status(400).json({"error":err.message});
     }

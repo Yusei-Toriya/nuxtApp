@@ -69,12 +69,13 @@ export default Vue.extend({
           this.$axios.post('/memo/deleteMemo', {memoId})
           const { data } = await this.$axios.get('/auth/getAllMemos')
             this.memo = data
+          }
+          catch(error) {
+            console.log(error)
+          }
+          location.reload();
         }
-        catch(error) {
-          console.log(error)
-        }
-      }
-    },
+      },
     editMemo(memo_id: number){
       this.$router.push(`/memo/${memo_id}`)
     }
