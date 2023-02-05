@@ -6,6 +6,85 @@
 
 .c-title{
   font-size: 2.1rem;
+  font-weight: 600;
+  text-align: center;
   @include mq-max(){
+  }
+}
+
+.c-input{
+	padding: 5px 15px;
+	width: 100%;
+	max-width: 100%;
+	min-height: 34px;
+
+	border: 1px solid $color_white;
+  background-color: $color_white;
+  border-radius: 100px;
+	line-height: 1.6;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	// text-align: center;
+  &:focus{
+		@include formFocus;
+	}
+	@include mq-max(){
+		padding: 5px 12px;
+		font-size: 1.6rem;
+		margin-top: 3px;
+	}
+}
+
+
+.c-textarea{
+	padding: 7px 15px;
+	width: 100%;
+	max-width: 100%;
+	min-height: 130px;
+	border: 1px solid $color_white;
+	background: $color_white;
+	border-radius: 15px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	@include scrollbar();
+
+	@include mq-max(){
+		font-size: 1.6rem;
+	}
+	&:focus{
+		@include formFocus;
+	}
+	&:disabled{
+		@include formDisabled;
+	}
+	&::placeholder{color: $color_placeholder;}
+	&::-ms-input-placeholder {color: $color_placeholder;}
+	&:-ms-input-placeholder {color: $color_placeholder;}
+
+}
+
+.c-btn{
+  >span,button{
+    position: relative;
+    display: inline-block;
+    border-radius: 25px;
+    padding: 10px 30px 15px 30px;
+    background-color: $color_dark_blue;
+    color: $color_white;
+  }
+  &.-logout{
+    >span{
+      padding: 0;
+      background-color: unset;
+      color: $color_dark_blue;
+      &::before{
+        content: "";
+        display: block;
+        position: absolute;
+        border-bottom: 2px solid $color_dark_blue;
+        width: 100%;
+        bottom: -6px;
+      }
+    }
   }
 }

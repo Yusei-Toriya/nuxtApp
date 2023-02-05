@@ -14,7 +14,7 @@
                 <label for="memo_title">メモタイトル</label>
               </dt>
               <dd>
-                <input type="text" v-model="memo.memo_title"/>
+                <input class="c-input" type="text" v-model="memo.memo_title" required/>
               </dd>
             </dl>
             <dl>
@@ -22,12 +22,18 @@
                 <label for="memo_detail">メモ詳細</label>
               </dt>
               <dd>
-                <input type="text" v-model="memo.memo_detail"/>
+                <textarea class="c-textarea" type="text" v-model="memo.memo_detail" required></textarea>
               </dd>
             </dl>
-            <button type="submit">メモ更新</button>
+            <button class="c-btn" type="submit">
+              <span>メモ更新</span>
+            </button>
+            <button class="c-btn -delete" @click="deleteMemo(memo.memo_id)">
+              <span>削除</span>
+            </button>
           </div>
         </form>
+        <RouterbackButton />
       </div>
     </div>
   </section>
@@ -37,13 +43,16 @@
 import Vue from "vue";
 import axios from 'axios'
 
+import RouterbackButton from "~/components/common/button/RouterbackButton.vue";
+
+
 export default Vue.extend({
   // ログイン後にのみ、このページに入れるようにする
   middleware: "auth",
   data () {
     return {
       memo: {
-        memo_id: '',
+        memo_id: 0,
         memo_title: '',
         memo_detail: '',
       },
@@ -87,13 +96,29 @@ export default Vue.extend({
     }
   },
   methods: {
-    editMemo(){
+    async editMemo(){
       console.log(this.memo)
       this.$axios.post('/memo/editMemo', this.memo)
       .then((res: any) => {
         this.$nuxt.$router.push('/mypage')
       })
     },
+    async deleteMemo(memoId: number){
+      if (confirm('選択したメモを削除します')) {
+        try{
+          this.$axios.post('/memo/deleteMemo', {memoId})
+          .then((res: any) => {
+            this.$nuxt.$router.push('/mypage')
+          })
+          // const { data } = await this.$axios.get('/auth/getAllMemos')
+          //   this.memo = data
+        }
+        catch(error) {
+          console.log(error)
+        }
+      }
+    },
   },
+  components: { RouterbackButton }
 });
 </script>

@@ -20,8 +20,9 @@ html{
 body {
 	font-family: $font-NotoSanJP;
 	color: $color_dark_blue;
-	font-size: 1.3rem;
-
+	// color: $color_blue;
+	font-size: 1.6rem;
+	background-color: $color_bg_light_blue;
 	line-height: 1.6;
 	letter-spacing: 0.7px;
 	// letter-spacing: 0.1rem;
@@ -35,11 +36,11 @@ body {
 		font-size: 1.1rem;
 	}
 }
-@include mq-min(){
-	a[href^="tel:"]{
-    pointer-events: none;
-  }
-}
+// @include mq-min(){
+// 	a[href^="tel:"]{
+//     pointer-events: none;
+//   }
+// }
 // body{
 	// opacity: 0;
 // }
@@ -62,7 +63,7 @@ body {
 a{
 	font-family: $font-NotoSanJP;
 	color: $color_dark_grey;
-	font-size: 1.2rem;
+	// font-size: 1.4rem;
 	line-height: 1.6;
 	// color: $color_link;
 	text-decoration: none;
