@@ -1,0 +1,47 @@
+/*
+ * _mixin.scss
+ */
+/* -----------------------------------
+media query print
+------------------------------------ */
+@mixin mq-print() {
+  @media print{
+    @content;
+  }
+}
+/* -----------------------------------
+media query ver1
+------------------------------------ */
+@mixin mq-max($breakpoint:768) {
+  @media screen and (max-width: $breakpoint+px) {
+    @content;
+  }
+}
+
+@mixin mq-min($breakpoint:769) {
+  @media screen and (min-width: $breakpoint+px) {
+    @content;
+  }
+}
+
+/* -----------------------------------
+transition
+------------------------------------ */
+@mixin transition{
+	transition: .2s ease-in-out;
+	// transition: .3s ease-in-out;
+}
+
+/* -----------------------------------
+clearfix
+------------------------------------ */
+@mixin clearfix{
+	&::after {
+		display: block;
+		clear: both;
+		content: "";
+	}
+}
+
+
+

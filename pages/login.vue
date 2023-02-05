@@ -1,25 +1,27 @@
 <template>
-  <div>
-    <div>
-      <h1>ログイン</h1>
-      <form @submit.prevent="loginUser">
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input v-model="user.email">
+  <section class="l-sec">
+    <div class="l-sec_in">
+      <div class="p-memoWrapper">
+        <h1>ログイン</h1>
+        <form @submit.prevent="userLogin">
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input v-model="user.email">
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" v-model="user.password">
+          </div>
+          <button type="submit">ログイン</button>
+        </form>
+        <div>
+          <nuxt-link to="/register">新規登録</nuxt-link>
         </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" v-model="user.password">
-        </div>
-        <button type="submit">ログイン</button>
-      </form>
-      <div>
-        <nuxt-link to="/register">新規登録</nuxt-link>
+        <RouterbackButton />
       </div>
-      <RouterbackButton />
     </div>
-  </div>
-  </template>
+  </section>
+</template>
   
   <script lang="ts">
   import Vue from "vue";
@@ -35,7 +37,7 @@
         };
     },
     methods: {
-        loginUser() {
+        userLogin() {
             this.$auth.loginWith("local", {
                 data: this.user
             });

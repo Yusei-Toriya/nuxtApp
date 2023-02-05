@@ -1,0 +1,135 @@
+/*
+ * _utility.scss
+ */
+//単一のスタイルを定義
+//important指定して必ず適用する
+/* -----------------------------------
+print
+------------------------------------ */
+.u-printHidden{
+	@include mq-print(){
+		display: none;
+	}
+}
+.u-printVisible{
+	display: none;
+	@include mq-print(){
+		display: block;
+	}
+}
+/* -----------------------------------
+font
+------------------------------------ */
+.u-fwb{font-weight:bold!important;}
+.u-fwn{font-weight:normal!important;}
+
+/* -----------------------------------
+align
+------------------------------------ */
+.u-tc{text-align:center!important;}
+.u-tl{text-align:left!important;}
+.u-tr{text-align:right!important;}
+
+/* -----------------------------------
+padding
+------------------------------------ */
+$space: 5,10,15,20,25,30,35,40,45,50,55,60;
+@each $prefix in $space {
+// top
+.u-mt#{$prefix} {
+	margin-top: #{$prefix}px !important;
+}
+.u-pt#{$prefix} {
+	padding-top: #{$prefix}px !important;
+}
+// right
+.u-mr#{$prefix} {
+	margin-right: #{$prefix}px !important;
+}
+.u-pr#{$prefix} {
+	padding-right: #{$prefix}px !important;
+}
+// bottom
+.u-mb#{$prefix} {
+	margin-bottom: #{$prefix}px !important;
+}
+.u-pb#{$prefix} {
+	padding-bottom: #{$prefix}px !important;
+}
+// left
+.u-ml#{$prefix} {
+	margin-left: #{$prefix}px !important;
+}
+.u-pl#{$prefix} {
+	padding-left: #{$prefix}px !important;
+}
+}
+
+
+/* -----------------------------------
+font-size rem
+------------------------------------ */
+.u-fz10px{font-size: 1.0rem;}
+.u-fz11px{font-size: 1.1rem;}
+.u-fz12px{font-size: 1.2rem;}
+.u-fz13px{font-size: 1.3rem;}
+.u-fz14px{font-size: 1.4rem;}
+
+/* -----------------------------------
+font-size em
+------------------------------------ */
+.u-fz09em{font-size: 0.9em;}
+.u-fz10em{font-size: 1.0em;}
+.u-fz11em{font-size: 1.1em;}
+.u-fz12em{font-size: 1.2em;}
+.u-fz13em{font-size: 1.3em;}
+.u-fz14em{font-size: 1.4em;}
+
+/* -----------------------------------
+clerfix
+------------------------------------ */
+.sec::after,
+.clearfix::after {
+	display: block;
+	clear: both;
+	content: "";
+}
+
+/* -----------------------------------
+display
+------------------------------------ */
+.u-d_b{ display: block!important; }
+.u-d_n{ display: none!important; }
+.u-d_ib{ display: inline-block!important; }
+
+/* -----------------------------------
+display adjust
+------------------------------------ */
+//max-width以下の表示状態を制御
+.u-smhide, .u-sphide, .u-middlehide, .u-tablethide, .u-basehide {
+	display: block;
+}
+.u-smblock, .u-spblock, .u-middleblock, .u-tabletblock, .u-baseblock {
+	display: none;
+}
+
+@media screen and (max-width: 1499px) {
+	.u-baseblock{display: block; }//以下でblock
+	.u-basehide {display: none !important; }//以下でnone
+}
+@media screen and (max-width: 959px) {
+	.u-tabletblock{display: block; }//以下でblock
+	.u-tablethide {display: none !important; }//以下でnone
+}
+@media screen and (max-width: 767px) {
+	.u-middleblock{display: block; } //以下でblock
+	.u-middlehide {display: none !important; }//以下でnone
+}
+@media screen and (max-width: 589px) {
+	.u-spblock{display: block; }//以下でblock
+	.u-sphide {display: none !important; }//以下でnone
+}
+@media screen and (max-width: 374px) {
+	.u-smblock{display: block; }//以下でblock
+	.u-smhide {display: none !important; }//以下でnone
+}

@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+/* -----------------------------------
+Color
+------------------------------------ */
+$color-baseFont: #333333;
+$color_fontWhite: #fff;
+$color_fontBlue: #2e404c;
+$color_fontCurrent: #7c8d96;
+// $color_link : #666666;
+
+$color_white: #fff;
+$color_black: #000000;
+
+$color_red: #b92a50;
+$color_green: #3ca04e;
+$color_orange: #e55405;
+$color_light_orange: #f2cfc0;
+$color_purple: #973c99;
+
+$color_light_pink: #f9f7f3;
+
+$color_light_blue: #849ea0;
+$color_blue: #315887;
+$color_dark_blue: #2e404c;
+
+$color_very_light_grey: #f1f1f1;
+$color_light_grey: #f2f3f4;
+$color_grey: #d8d8d8;
+$color_dark_grey: #333333;
+$color_bg_grey: #e8e8e8;
+
+
+// ------------------------------------------------------
+// Fonts
+//
+
+// @import url(https://fonts.googleapis.com/earlyaccess/notosansjp.css);
+// @import url(https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap);
+// @import url(https://fonts.googleapis.com/css2?family=Anaheim&family=Readex+Pro:wght@500&family=Roboto:ital,wght@1,&display=swap);
+
+$font-NotoSanJP:'Noto Sans JP', sans-serif;
+$font-mincho: "游明朝体", "Yu Mincho", YuMincho, "ヒラギノ明朝 Pro", "Hiragino Mincho Pro", "MS P明朝", "MS PMincho", serif;
+$font-gothic:"游ゴシック体", "Yu Gothic", YuGothic, serif;
+$font-Roboto:'Roboto Condensed', sans-serif;
+$font-ReadexPro: 'Readex Pro', sans-serif;

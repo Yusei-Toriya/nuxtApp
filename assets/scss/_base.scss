@@ -1,0 +1,113 @@
+/*
+ * _base.scss
+ */
+/* -----------------------------------
+base Setting
+------------------------------------ */
+
+@import "/assets/scss/_mixin.scss";
+// @import "/assets/scss/fonts.scss";
+// @import "/assets/scss/setting.scss";
+@import "/assets/scss/_variables.scss";
+
+
+html{
+	font-size: 62.5%;
+}
+//fontサイズ
+//各スタイル定義ではremを指定する 16px → 1.6rem
+//https://bsj-k.com/font-size-rem-bestpractice/
+body {
+	font-family: $font-NotoSanJP;
+	color: $color_dark_blue;
+	font-size: 1.3rem;
+
+	line-height: 1.6;
+	letter-spacing: 0.7px;
+	// letter-spacing: 0.1rem;
+	// @include font-yugothic-m();
+	// letter-spacing: 0.01em;
+	// max-height: 999999px;
+	// -webkit-text-size-adjust: 100%;
+	// -webkit-font-smoothing: antialiased;
+	// 		// font-smoothing: antialiased;
+	@include mq-max(){
+		font-size: 1.1rem;
+	}
+}
+@include mq-min(){
+	a[href^="tel:"]{
+    pointer-events: none;
+  }
+}
+// body{
+	// opacity: 0;
+// }
+// body.is-visible{
+// 	transition: opacity 1.0s ease-out;
+// 	opacity: 1;
+// }
+// @media all and (-ms-high-contrast: none) {
+// 	body{
+// 		opacity: 1!important;
+// 	}
+// }
+
+// p{
+// 	text-align: justify;
+// }
+
+//headerの余白mgtp ->17px
+
+a{
+	font-family: $font-NotoSanJP;
+	color: $color_dark_grey;
+	font-size: 1.2rem;
+	line-height: 1.6;
+	// color: $color_link;
+	text-decoration: none;
+	&:hover{
+		// opacity: .8;
+		text-decoration: none;
+	}
+	&.notActive{
+		pointer-events: none;
+	}
+	// @include mq-min() {
+	// 	&[href*="tel:"] {
+	// 		pointer-events: none;
+	// 		cursor: default;
+	// 		text-decoration: none;
+	// 	}
+	// }
+}
+
+input{
+	appearance: none;
+	margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  outline: none;
+	display: inline;
+}
+figcaption{
+	font-size: 1.1rem;
+	font-weight: 500;
+	margin-top: 10px;
+}
+// ::selection {
+// 		background: $color_selection;
+//     color: $color_white;
+// }
+// ::-moz-selection {
+// 		background: $color_selection;
+//     color: $color_white;
+// }
+
+// *:hover{
+// 	@include mq-max(){
+// 		pointer-events: none;
+// 	}
+// }
