@@ -1,7 +1,7 @@
 <template>
   <section class="l-sec">
     <div class="l-sec_in">
-      <div class="p-wrapper">
+      <div class="p-memoWrapper">
         <h1>ユーザ登録</h1>
         <form @submit.prevent="registerUser">
           <div class="form-group">

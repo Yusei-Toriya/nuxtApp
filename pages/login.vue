@@ -1,9 +1,9 @@
 <template>
   <section class="l-sec">
     <div class="l-sec_in">
-      <div class="p-wrapper">
+      <div class="p-memoWrapper">
         <h1>ログイン</h1>
-        <form @submit.prevent="loginUser">
+        <form @submit.prevent="userLogin">
           <div class="form-group">
             <label for="email">Email:</label>
             <input v-model="user.email">
@@ -37,7 +37,7 @@
         };
     },
     methods: {
-        loginUser() {
+        userLogin() {
             this.$auth.loginWith("local", {
                 data: this.user
             });

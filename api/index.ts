@@ -163,56 +163,91 @@ app.get("/auth/user", (req: any, res: any) => {
   });
 });
 
-app.get("/auth/memo", function (req: any, res: any, next: any) {
+// ログインユーザーのメモ一覧取得
+app.get("/memo/getAllMemos", function (req: any, res: any, next: any) {
+  // const bearToken = req.headers;
   const bearToken = req.headers["authorization"];
+  console.log(bearToken);
   const bearer = bearToken.split(" ");
   const token = bearer[1];
   const decodedToken = jwt.verify(token,'secret');
   const user_id = decodedToken.id;
-  const select = 'SELECT memo_title, memo_detail FROM memo WHERE user_id = ?'
+  const select = 'SELECT memo_id, memo_title, memo_detail FROM memo WHERE user_id = ? AND del_flg = 0'
   connectionInfo.query(select, user_id, function (error: any, results: any) {
     if (error) {
       throw error;
     }
-    // console.log(results[0].memo_title)
-    // const memo = []
-    // memo[0] = results[0].memo_title
-    // memo[1] = results[0].memo_detail
     return res.status(200).json({
       results
     });
   });
-  // const decodedToken = jwt.verify(token,'secret',(err: any, user: any)=>{
-  //   if(err){
-  //     return res.sendStatus(403)
-  //   }else{
-  //     // const decoded = jwt.verify(token, "secret");
-  //     const user_id = decodedToken.id;
-  //     const select = 'select * from memo where user_id = ?'
-  //     connectionInfo.query(select, user_id, function (error: any, results: any) {
-  //       if (error) {
-  //         throw error;
-  //       }
-  //       return res.status(200).json({
-  //         results
-  //       });
-  //     });
+});
+
+// ログインユーザーのメモ取得(1件)
+// app.get("/memo/getOneMemo", function (req: any, res: any, next: any) {
+app.get("/memo/:id", function (req: any, res: any, next: any) {
+  console.log('AAA');
+  const bearToken = req.headers["authorization"];
+  // const bearToken = req.headers;
+  // console.log(bearToken);
+  const bearer = bearToken.split(" ");
+  const token = bearer[1];
+  console.log(token);
+  const decodedToken = jwt.verify(token,'secret');
+  const user_id = decodedToken.id;
+  const memo_id: number = req.params.id;
+  // const memo_id: number = req.body.id;
+  console.log(memo_id)
+
+  const select = 'SELECT memo_id, user_id, memo_title, memo_detail FROM memo WHERE user_id = ? AND memo_id = ? AND del_flg = 0'
+  // const select = 'SELECT memo_id, memo_title, memo_detail FROM memo WHERE memo_id = ? AND del_flg = 0'
+  // connectionInfo.query(select, [user_id, memo_id], function (error: any, results: any) {
+  connectionInfo.query(select, [user_id, memo_id], function (error: any, results: any, fields: any) {
+  // connectionInfo.query(select, memo_id, function (error: any, results: any) {
+    // if (error) throw error;
+    // console.log('The solution is: ', results[0].solution);
+  // const data = {
+  //     title: 'Memo Title',
+  //     body: 'Memo Body'
   //   }
+    // res.json(results)
+    // res.send(results)
+    if (error) {
+      return res.status(400).json({
+        error: error
+      });
+    }
+    console.log(results[0]);
+    return res.status(200).json({
+      results
+    });
+    // if (error) {
+    //   throw error;
+    // }
+    // console.log(results[0]);
+    // return res.status(200).json({
+    //   results
+    // });
+  });
+  // connectionInfo.query(select, user_id, memo_id, (error: any, results: any, fields: any) => {
+  //   if (error) throw error;
+  //   console.log('The solution is: ', results[0].solution);
   // });
 });
 
 // メモ新規作成
-app.post("/memo/register", function (req: any, res: any, user: any) {
-  const bearToken = req.headers["authorization"];
-  const bearer = bearToken.split(" ");
-  const token = bearer[1];
-  const decodedToken = jwt.verify(token,'secret');
-  const user_id = decodedToken.id;
-  // const user_id = user[0].id;
-  const memo_title = req.body.memo_title;
-  const memo_detail = req.body.memo_detail;
-  const del_flg = 0;
-  const insert = 'INSERT INTO MEMO (user_id, memo_title, memo_detail, del_flg) VALUES (?,?,?,?)'
+app.post("/memo/createMemo", function (req: any, res: any, user: any) {
+  const bearToken: string = req.headers["authorization"];
+  const bearer: any = bearToken.split(" ");
+  const token: any = bearer[1];
+  const decodedToken: any = jwt.verify(token,'secret');
+  console.log('decodedToken↓');
+  console.log(decodedToken);
+  const user_id: number = decodedToken.id;
+  const memo_title: string = req.body.memo_title;
+  const memo_detail: string = req.body.memo_detail;
+  const del_flg: number = 0;
+  const insert: string = 'INSERT INTO MEMO (user_id, memo_title, memo_detail, del_flg) VALUES (?,?,?,?)';
   connectionInfo.query(insert, [user_id, memo_title, memo_detail, del_flg],(err: any) => {
     if (err) {
       return res.status(400).json({"error":err.message});
@@ -223,8 +258,60 @@ app.post("/memo/register", function (req: any, res: any, user: any) {
     })
   })
 });
+
+
 // メモ編集
+app.post("/memo/editMemo", function (req: any, res: any, user: any) {
+  const bearToken: string = req.headers["authorization"];
+  const bearer: any = bearToken.split(" ");
+  const token: any = bearer[1];
+  const decodedToken: any = jwt.verify(token,'secret');
+  console.log('editMemo-decodedToken↓');
+  console.log(decodedToken);
+  const memo_title: string = req.body.memo_title;
+  const memo_detail: string = req.body.memo_detail;
+  const memo_id: number = req.body.memo_id;
+  const user_id: number = decodedToken.id;
+  // const del_flg: number = 0;
+  const update: string = 'UPDATE memo SET memo_title = ?, memo_detail = ? WHERE memo_id = ? AND user_id = ?';
+  connectionInfo.query(update, [memo_title, memo_detail, memo_id, user_id],(err: any) => {
+    if (err) {
+      return res.status(400).json({"error":err.message});
+    }
+    return res.json({
+      "message": "メモの更新に成功しました",
+      "data": [req.body.memo_title, req.body.memo_detail]
+    })
+  })
+});
+
 // メモ削除
+app.post("/memo/deleteMemo", function (req: any, res: any, user: any) {
+  const bearToken: string = req.headers["authorization"];
+  const bearer: any = bearToken.split(" ");
+  const token: any = bearer[1];
+  const decodedToken: any = jwt.verify(token,'secret');
+  // console.log('decodedToken↓');
+  // console.log(decodedToken);
+  // const memo_id: number = req.body;
+  const memo_id: any = req.body.memoId;
+  // console.log('memo_id↓');
+  // console.log(memo_id);
+  const user_id: number = decodedToken.id;
+  // const memo_title: string = req.body.memo_title;
+  // const memo_detail: string = req.body.memo_detail;
+  // const del_flg: number = 0;
+  const update: string = 'UPDATE memo SET del_flg = 1 WHERE memo_id = ? AND user_id = ?';
+  connectionInfo.query(update, memo_id, user_id, (err: any) => {
+    if (err) {
+      return res.status(400).json({"error":err.message});
+    }
+    return res.json({
+      "message": "メモの削除に成功しました",
+      // "data": [req.body.memo_title, req.body.memo_detail]
+    })
+  })
+});
 
 app.listen(port, () => { console.log(`${port}番のポートで待機中です...`);})
 

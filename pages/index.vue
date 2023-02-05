@@ -1,7 +1,7 @@
 <template>
   <section class="l-sec">
     <div class="l-sec_in">
-      <div class="p-wrapper">
+      <div class="p-memoWrapper">
         <h1>メモ帳アプリ</h1>
         <div>
           <p>アカウントをお持ちの方はこちらからログイン</p>

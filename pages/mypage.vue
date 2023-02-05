@@ -1,38 +1,44 @@
 <template>
   <section class="l-sec">
     <div class="l-sec_in">
-      <div class="p-wrapper">
+      <div class="p-memoWrapper">
         <div v-if="$auth.user != null">
-          <!-- <div>{{ $auth.user }}</div> -->
-          <!-- <div>{{ $data.memo.results }}</div> -->
-          <div class="p-wrapper">
-            <h1 class="c-title">「{{$auth.user.name}}」さんのメモ一覧</h1>
-            <div class="p-memoTable">
-              <table>
-                <thead>
-                  <tr>
-                    <th>タイトル</th>
-                    <th>詳細</th>
-                  </tr>
-                </thead>
-                <tbody class="">
-                  <tr v-for="memo in $data.memo.results" :key="memo.memo_id">
-                    <td>{{memo.memo_title}}</td>
-                    <td>{{memo.memo_detail}}</td>
-                    <td class="-delete">
-                      <button @click="deleteMemo()">
-                        <span></span>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <h1 class="c-title">「{{$auth.user.name}}」さんのメモ一覧</h1>
+          <div class="p-memoTable">
+            <table>
+              <thead>
+                <tr>
+                  <th>メモID</th>
+                  <th>タイトル</th>
+                  <th>詳細</th>
+                </tr>
+              </thead>
+              <tbody class="">
+                <tr v-for="memo in $data.memo.results" :key="memo.memo_id">
+                  <td>{{memo.memo_id}}</td>
+                  <td>{{memo.memo_title}}</td>
+                  <td>{{memo.memo_detail}}</td>
+                  <td class="">
+                    <input type="hidden" v-model="memo.memo_id">
+                    <button @click="editMemo(memo.memo_id)">
+                      <span>編集</span>
+                    </button>
+                  </td>
+                  <td class="">
+                    <button @click="deleteMemo(memo.memo_id)">
+                      <span>削除</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="cnt1">
+              <nav>
+                <nuxt-link to="/createMemo">新規メモ作成</nuxt-link>
+              </nav>
+              <button @click="$auth.logout()">ログアウト</button>
             </div>
-            <nav>
-              <nuxt-link to="/createMemo">新規メモ作成</nuxt-link>
-            </nav>
           </div>
-          <button @click="$auth.logout()">ログアウト</button>
           <RouterbackButton />
         </div>
       </div>
@@ -50,26 +56,33 @@ export default Vue.extend({
   data () {
     return {
       memo: {
+        memo_id: '',
         memo_title: '',
         memo_detail: '',
       }
     }
   },
   methods: {
-    createMemo(){
-      this.$axios.post('/memo/register', this.memo)
-      .then((res: any,) => {
-      })
+    async deleteMemo(memoId: number){
+      if (confirm('選択したメモを削除します')) {
+        try{
+          this.$axios.post('/memo/deleteMemo', {memoId})
+          const { data } = await this.$axios.get('/auth/getAllMemos')
+            this.memo = data
+        }
+        catch(error) {
+          console.log(error)
+        }
+      }
     },
-    deleteMemo(){
-      alert("削除ボタンをクリックしました");
-    },
-
+    editMemo(memo_id: number){
+      this.$router.push(`/memo/${memo_id}`)
+    }
   },
   async mounted() {
-    const { data } = await this.$axios.get('/auth/memo')
+    const { data } = await this.$axios.get('/memo/getAllMemos')
     this.memo = data
-    },
+  },
   components: { RouterbackButton }
 });
 </script>
