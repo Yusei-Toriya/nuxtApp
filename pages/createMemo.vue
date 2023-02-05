@@ -44,7 +44,7 @@
       },
       methods: {
         createMemo(){
-          this.$axios.post('/memo/create', this.memo)
+          this.$axios.post('/memo/createMemo', this.memo)
           .then((res: any) => {
             this.$nuxt.$router.push('/mypage')
           })
