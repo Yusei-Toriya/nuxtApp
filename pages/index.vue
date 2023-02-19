@@ -1,21 +1,32 @@
 <template>
-  <section class="l-sec">
+  <!-- <section class="l-sec">
     <div class="l-sec_in">
       <div class="p-memoWrapper">
-        <h1>メモ帳アプリ</h1>
+        <h1 class="c-title">メモ帳アプリ</h1>
         <div>
           <p>アカウントをお持ちの方はこちらからログイン</p>
           <nav>
-            <nuxt-link to="/login">Login</nuxt-link>
+            <div class="p-buttonWrapper">
+              <div class="c-btn">
+                <nuxt-link class="c-nav" to="/login">
+                  ログイン
+                </nuxt-link>
+              </div>
+            </div>
           </nav>
           <p>新規登録はこちら</p>
+          <nuxt-link to="/register">
+            <button class="c-btn">
+              <span>新規登録</span>
+            </button>
+          </nuxt-link>
           <nav>
-            <nuxt-link to="/register">新規登録</nuxt-link>
+            <nuxt-link class="c-nav" to="/register">新規登録</nuxt-link>
           </nav>
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 </template>
 
 <script lang="ts">
@@ -23,6 +34,8 @@ import Vue from "vue";
 import RouterbackButton from "~/components/common/button/RouterbackButton.vue";
 
 export default Vue.extend({
-  components: { RouterbackButton }
+  async mounted() {
+    this.$router.push("/login")
+  },
 });
 </script>

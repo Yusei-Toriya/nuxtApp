@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <button @click="goBack">前のページへ</button>
-  </div>
+  <button class="c-btn -back" @click="goBack" type="button">
+    <span>戻る</span>
+  </button>
 </template>
 
 <script lang="ts">

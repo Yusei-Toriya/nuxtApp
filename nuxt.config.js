@@ -1,8 +1,9 @@
 import { Auth } from "@nuxtjs/auth-next"
 import nuxtAuth from '@nuxtjs/auth'
-
+import axios from 'axios'
 export default {
   // srcDir: 'src/',
+  // mode: 'universal',
   store: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -36,7 +37,8 @@ export default {
     '@nuxt/typescript-build',
   ],
   router: {
-    // middleware: ['auth'],
+    middleware: ['auth'],
+    middleware: ['messages']
     // base: "/",
     // register: "/register",
   },
@@ -50,6 +52,7 @@ export default {
   ],
   styleResources: {
     scss: [
+      'assets/scss/_reset.scss',
       'assets/scss/_base.scss',
       'assets/scss/_common.scss',
       'assets/scss/_components.scss',
@@ -58,7 +61,7 @@ export default {
       'assets/scss/_mixin.scss',
       'assets/scss/_pages.scss',
       'assets/scss/_project.scss',
-      'assets/scss/_reset.scss',
+      'assets/scss/_project_table.scss',
       'assets/scss/_setting.scss',
       'assets/scss/_utility.scss',
       'assets/scss/_variables.scss',
@@ -91,16 +94,6 @@ export default {
             url: "/auth/user",
             method: "get",
             propertyName: "user",
-          },
-          memo: {
-            url: "/auth/memo",
-            method: "get",
-            propertyName: "memo",
-          },
-          createMemo: {
-            url: "/memo/register",
-            method: "post",
-            propertyName: "memo",
           },
         },
       },

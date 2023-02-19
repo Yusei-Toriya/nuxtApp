@@ -1,23 +1,30 @@
 <template>
   <section class="l-sec">
     <div class="l-sec_in">
-      <div class="p-memoWrapper">
-        <h1>ログイン</h1>
+      <div class="p-userForm">
+        <h1 class="c-title">メモ帳アプリ ログインページ</h1>
         <form @submit.prevent="userLogin">
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input v-model="user.email">
+          <div class="_cnt">
+            <label for="email">メールアドレス</label>
+            <input class="c-input" v-model="user.email">
           </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" v-model="user.password">
+          <div class="_cnt">
+            <label for="password">パスワード</label>
+            <input class="c-input" type="password" v-model="user.password">
           </div>
-          <button type="submit">ログイン</button>
+          <div class="p-buttonWrapper">
+            <div class="c-btn -forward">
+              <button type="submit">ログイン</button>
+            </div>
+          </div>
         </form>
-        <div>
-          <nuxt-link to="/register">新規登録</nuxt-link>
+        <div class="c-btnBox">
+          <nuxt-link to="/register">
+            <button class="c-btn -register">
+              <span>新規登録はこちら</span>
+            </button>
+          </nuxt-link>
         </div>
-        <RouterbackButton />
       </div>
     </div>
   </section>
@@ -27,21 +34,57 @@
   import Vue from "vue";
   import RouterbackButton from "~/components/common/button/RouterbackButton.vue";
 
+
   export default Vue.extend({
+    middleware: "messages",
+
     data() {
-        return {
-            user: {
-                email: "",
-                password: "",
-            }
-        };
+      return {
+        user: {
+          email: "",
+          password: "",
+        },
+        message: "",
+        isSuccess: null,
+      };
     },
     methods: {
-        userLogin() {
-            this.$auth.loginWith("local", {
-                data: this.user
-            });
-        },
+      userLogin() {
+        const email = this.user.email
+        const password = this.user.password
+        if (email && password) {
+          this.$auth.loginWith("local", {
+            data: this.user,
+          })
+          .then(() => {
+            this.$store.commit('setMessage', 'ログインしました')
+            this.$store.commit('setIsSuccess', true)
+            this.$store.commit('setIsShow', true)
+            this.$nuxt.$router.push('/mypage')
+            setTimeout(() => {
+              this.$store.commit('setMessage', '')
+              this.$store.commit('setIsShow', false)
+              this.$store.commit('setIsSuccess', null)
+            }, 3000);
+          })
+          .catch((error) => {
+            const errorStatus = error.response.status;
+            if(errorStatus === 401){
+              this.$store.commit('setMessage', 'メールアドレス、またはパスワードが間違っています')
+              this.$store.commit('setIsSuccess', false)
+              this.$store.commit('setIsShow', true)
+              setTimeout(() => {
+                this.$store.commit('setMessage', '')
+                this.$store.commit('setIsSuccess', false)
+                this.$store.commit('setIsShow', false)
+              }, 3000);
+            }
+          });
+        }
+        else {
+          alert('必須項目を入力してください')
+        }
+      },
     },
     components: { RouterbackButton }
 });

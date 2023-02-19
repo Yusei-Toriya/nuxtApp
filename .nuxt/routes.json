@@ -1,0 +1,44 @@
+[
+  {
+    "name": "createMemo",
+    "path": "/createMemo",
+    "component": "C:\\\\localData\\\\NuxtApp\\\\pages\\\\createMemo.vue",
+    "chunkName": "pages/createMemo",
+    "_name": "_370772bc"
+  },
+  {
+    "name": "login",
+    "path": "/login",
+    "component": "C:\\\\localData\\\\NuxtApp\\\\pages\\\\login.vue",
+    "chunkName": "pages/login",
+    "_name": "_1ee6a41a"
+  },
+  {
+    "name": "mypage",
+    "path": "/mypage",
+    "component": "C:\\\\localData\\\\NuxtApp\\\\pages\\\\mypage.vue",
+    "chunkName": "pages/mypage",
+    "_name": "_52a805be"
+  },
+  {
+    "name": "register",
+    "path": "/register",
+    "component": "C:\\\\localData\\\\NuxtApp\\\\pages\\\\register.vue",
+    "chunkName": "pages/register",
+    "_name": "_7d507bee"
+  },
+  {
+    "name": "memo-id",
+    "path": "/memo/:id?",
+    "component": "C:\\\\localData\\\\NuxtApp\\\\pages\\\\memo\\\\_id.vue",
+    "chunkName": "pages/memo/_id",
+    "_name": "_c209716c"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\localData\\\\NuxtApp\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_26e50adc"
+  }
+]

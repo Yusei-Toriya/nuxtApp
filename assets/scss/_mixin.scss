@@ -1,6 +1,8 @@
 /*
  * _mixin.scss
  */
+@import "/assets/scss/_setting.scss";
+
 /* -----------------------------------
 media query print
 ------------------------------------ */
@@ -23,12 +25,111 @@ media query ver1
     @content;
   }
 }
+/* -----------------------------------
+media query ver2
+------------------------------------ */
+//https://www.tam-tam.co.jp/tipsnote/html_css/post10708.html
+//https://qiita.com/flatsato/items/24b47c7da42d2fec5654
+//https://hashimotosan.hatenablog.jp/entry/2019/05/28/164834
+
+// 変数の定義
+// min-width
+// $breakpoint-min: (
+//   'sp320' : 'screen and (min-width: 320px)',
+//   'sp'    : 'screen and (min-width: 590px)',
+//   'tb'    : 'screen and (min-width: 960px)',
+//   'wide'  : 'screen and (min-width: 1500px)',
+// ) !default;
+
+// // max-width
+// $breakpoint-max: (
+//   'sp320' : 'screen and (max-width: 320px)',
+//   'sp'    : 'screen and (max-width: 589px)',
+//   'tb'    : 'screen and (max-width: 959px)',
+// ) !default;
+
+// // @mixinの定義
+// // @mixin mq-min($breakpoint: sp) {
+// //   @media #{map-get($breakpoint-min, $breakpoint)} {
+// //     @content;
+// //   }
+// // }
+
+// // @mixin mq-max($breakpoint: sp) {
+// //   @media #{map-get($breakpoint-max, $breakpoint)} {
+// //     @content;
+// //   }
+// // }
+
+/* -----------------------------------
+cellHover
+------------------------------------ */
+@mixin cellHover{
+	background: #FFF358;
+	// box-shadow:0px 0px 5px 0px rgba(0,0,0,.1);
+	// box-shadow:0px 0px 10px 0px rgba(0,0,0,.2);
+	cursor: pointer;
+}
+
+/* -----------------------------------
+btnHover
+------------------------------------ */
+//使わない
+@mixin btnHover{
+	box-shadow:0px 1px 2px 0px rgba(0,0,0,.3);
+}
+
+/* -----------------------------------
+formFocus
+------------------------------------ */
+// @mixin formFocus{
+// 	outline: none;
+// 	background: $color_sblue_p;
+// 	border: 1px solid $color_sblue;
+// 	box-shadow:0px 0px 5px 0px #999;
+// 	box-shadow:0px 0px 5px 0px rgba(0,0,0,.2);
+// }
+@mixin formFocus{
+	outline: none;
+	background: $color_yellow_p;
+	border: 1px solid $color_yellow;
+	box-shadow:0px 0px 5px 0px #999;
+	box-shadow:0px 0px 5px 0px rgba(0,0,0,.1);
+}
+
+
+/* -----------------------------------
+formDisabled
+------------------------------------ */
+@mixin formDisabled{
+	background: #ddd;
+	border: 1px dotted #bbb;
+	&::placeholder{color: #fcfcfc;}
+	&::-ms-input-placeholder {color: #fcfcfc;}
+	&:-ms-input-placeholder {color: #fcfcfc;}
+	user-select:none;
+	cursor: default;
+	//cursor: not-allowed;//禁止マークが出るから微妙かも
+}
+
+/* -----------------------------------
+dropShadow
+------------------------------------ */
+@mixin dropShadow{
+	outline: none;
+	box-shadow:2px 2px 4px 1px rgba(0,0,0,.08);
+}
 
 /* -----------------------------------
 transition
 ------------------------------------ */
 @mixin transition{
-	transition: .2s ease-in-out;
+	@include mq-min(){
+		transition: .2s ease-out;
+	}
+	@include mq-max(){
+		transition: .1s ease-out;
+	}
 	// transition: .3s ease-in-out;
 }
 
@@ -42,6 +143,41 @@ clearfix
 		content: "";
 	}
 }
+/* -----------------------------------
+scrollbar
+------------------------------------ */
+@mixin scrollbar{
+	&::-webkit-scrollbar{
+		width: 10px;
+	}
+	&::-webkit-scrollbar-track{
+		background: transparent;
+	}
+	&::-webkit-scrollbar-thumb{
+		background: rgba(0,0,0,.3);
+		transform: scale(80%);
+		border-radius: 50px;
+	}
+}
 
 
+/* -----------------------------------
+scrollbar2
+------------------------------------ */
+@mixin scrollbar2{
+	&::-webkit-scrollbar{
+		width: 5px;
+		height: 8px;
+	}
+	&::-webkit-scrollbar-track{
+		background: transparent;
+		background: #f9f9f9;
+	}
+	&::-webkit-scrollbar-thumb{
+		// background: rgba(255,0,0,.1);
+		background: rgba(0,0,0,.1);
 
+		// transform: scale(80%);
+		border-radius: 50px;
+	}
+}

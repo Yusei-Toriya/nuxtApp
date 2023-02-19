@@ -6,6 +6,319 @@
 
 .c-title{
   font-size: 2.1rem;
+  font-weight: 600;
+  text-align: center;
   @include mq-max(){
+		font-size: 1.6rem;
   }
 }
+
+.c-input{
+	padding: 5px 15px;
+	width: 100%;
+	max-width: 100%;
+	min-height: 34px;
+	border: 1px solid $color_white;
+	background: $color_white;
+	border-radius: 100px;
+	line-height: 1.6;
+	margin-top: 2px;
+	margin-bottom: 2px;
+  &:focus{
+		@include formFocus;
+	}
+	@include mq-max(){
+		padding: 5px 12px;
+		font-size: 1.6rem;
+		margin-top: 3px;
+	}
+}
+
+
+.c-textarea{
+	padding: 7px 15px;
+	width: 100%;
+	max-width: 100%;
+	min-height: 130px;
+	border: 1px solid $color_white;
+	background: $color_white;
+	border-radius: 15px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	@include scrollbar();
+
+	@include mq-max(){
+		font-size: 1.6rem;
+	}
+	&:focus{
+		@include formFocus;
+	}
+	&:disabled{
+		@include formDisabled;
+	}
+	&::placeholder{color: $color_placeholder;}
+	&::-ms-input-placeholder {color: $color_placeholder;}
+	&:-ms-input-placeholder {color: $color_placeholder;}
+
+}
+
+.c-btnBox{
+	width: fit-content;
+	// display: flex;
+	margin: 50px auto;
+	text-align: center;
+	@include mq-max() {
+		flex-direction: column-reverse;
+		margin-top: 30px;
+	}
+	.c-btn{
+		letter-spacing: normal;
+	}
+	//ボタンが複数ある場合
+	&.-multi{
+		width: 100%;
+		max-width: 450px;
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap-reverse;
+		.c-btn{
+			margin: 10px auto;
+			@include mq-max() {
+				margin: 5px auto;
+			}
+		}
+		.c-btn + .c-btn{
+			@include mq-max() {
+				margin-top: 15px;
+			}
+		}
+	}
+}
+
+.c-btn{
+	position: relative;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	display: inline-block;
+	text-decoration: none;
+	@include mq-max(){
+		margin-top: 10px
+	}
+  >span,button,a{
+		@include transition;
+		min-width: 200px;
+		background-color: $color_dark_blue;
+		color: $color_white;
+		font-size: 1.6rem;
+		padding: 10px 40px 13px 40px;
+		box-shadow: 0px 2px 2px 0px rgba($color_grey, .9);
+		border-radius: 100px;
+    position: relative;
+    display: inline-block;
+		text-decoration: none;
+		outline: none;
+		white-space: nowrap;
+		&::before,::after{
+			@include transition;
+		}
+		// @include mq-max(){
+		// 	min-width: unset;
+		// }
+  }
+	&.-register{
+		width: fit-content;
+		display: block;
+		margin: auto;
+    >span,button,a{
+			min-width: unset;
+      padding: 0;
+			box-shadow: none;
+			border-radius: none;
+      background-color: unset;
+      color: $color_dark_blue;
+      // color: $color_white;
+      &::before{
+        content: "";
+        display: block;
+        position: absolute;
+        border-bottom: 2px dashed $color_dark_blue;
+        width: 100%;
+        bottom: -8px;
+				left: 0;
+      }
+    }
+	}
+  &.-logout{
+		width: fit-content;
+		display: block;
+		margin: auto;
+    >span,button,a{
+			min-width: unset;
+      padding: 0;
+			box-shadow: none;
+			border-radius: none;
+      background-color: unset;
+      color: $color_dark_blue;
+      &::before{
+        content: "";
+        display: block;
+        position: absolute;
+        border-bottom: 2px dashed $color_dark_blue;
+        width: 100%;
+        bottom: -6px;
+				left: 0;
+      }
+    }
+  }
+	&.-forward{
+		>span,button,a{
+			&::before{
+				content: "";
+				position: absolute;
+				top: 18px;
+				right: 25px;
+				border-top: 2px solid $color_white;
+				border-right: 2px solid $color_white;
+				width: 10px;
+				height: 10px;
+				transform: rotate(45deg);
+			}
+			&:hover{
+				&::before{
+					right: 20px;
+				}
+			}
+		}
+	}
+	&.-back{
+		>span,button,a{
+			background-color: $color_white;
+			color: $color_font_gray;
+			&::before{
+				content: "";
+				position: absolute;
+				top: 18px;
+				left: 25px;
+				border-top: 2px solid $color_dark_blue;
+				border-left: 2px solid $color_dark_blue;
+				width: 10px;
+				height: 10px;
+				transform: rotate(-45deg);
+			}
+			&:hover{
+				&::before{
+					left: 20px;
+				}
+			}
+		}
+	}
+	&.-deleteIcon{
+		>span,button,a{
+			background-color: $color_font_gray;
+			color: $color_font_gray;
+			min-width: unset;
+			padding: unset;
+			width: 30px;
+			height: 30px;
+			&::before{
+				content: "✖";
+				position: absolute;
+				color: $color_white;
+				top: 0px;
+				left: 8px;
+				font-size: 1.8rem;
+			}
+		}
+	}
+	&.-delete{
+		width: fit-content;
+		display: block;
+		margin: auto;
+    >span,button,a{
+			min-width: unset;
+      padding: 0;
+			box-shadow: none;
+			border-radius: none;
+      background-color: unset;
+      color: $color_dark_blue;
+      &::before{
+        content: "";
+        display: block;
+        position: absolute;
+        border-bottom: 2px dashed $color_dark_blue;
+        width: 100%;
+        bottom: -8px;
+				left: 0;
+      }
+    }
+	}
+	&.-viewIcon{
+		>span,button,a{
+			background-color: $color_dark_blue;
+			color: $color_white;
+			border: 2px solid transparent;
+			min-width: unset;
+			padding: unset;
+			width: 30px;
+			height: 30px;
+			&::before{
+				content: "";
+				position: absolute;
+				top: 8px;
+				left: 6px;
+				border-top: 2px solid $color_white;
+				border-right: 2px solid $color_white;
+				width: 10px;
+				height: 10px;
+				transform: rotate(45deg);
+			}
+			&:hover{
+				background-color: $color_white;
+				border-color: $color_dark_blue;
+				&::before{
+					border-color: $color_dark_blue;
+				}
+			}
+		}
+	}
+}
+
+.c-message{
+	position: fixed;
+  z-index: 9999;
+  opacity: 0;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-block;
+  text-align: center;
+  border-radius: 15px;
+  width: 50%;
+  padding: 20px 0px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+	background-color: #fff;
+	transition: 0.3s all;
+	@include mq-max(){
+		width: 95%;
+	}
+	&.-success{
+		color: blue;
+	}
+	&.-failed{
+		color: red;
+	}
+	&.-show{
+		opacity: 1;
+		top: 20px;
+		transition: 0.3s all;
+	}
+	&.-hide{
+		opacity: 0;
+		top: 0;
+		transition: 0.3s all;
+	}
+}
+
+// .c-nav{
+// 	border: 1px solid #dfdfdf;
+// }

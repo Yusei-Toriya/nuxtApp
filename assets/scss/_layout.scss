@@ -12,8 +12,9 @@ wrapper
 ------------------------------------ */
 .l-wrapper{
 	position: relative;
-	min-height: 500px;
-	overflow: hidden;
+	width: 100%;
+	min-height: 100vh;
+	overflow-x: hidden;
 }
 /* -----------------------------------
 header
@@ -534,14 +535,17 @@ section
 //上下の余白は各pで上書きする
 .l-sec{
 	padding: 100px 20px;
+	width: 80%;
 	max-width: 1400px;
 	margin: 0 auto;
 	// border: 1px dotted red;
 	@include mq-max(){
+		width: 100%;
 		// max-width: 500px;
 		padding: 50px 10px;
 	}
 	&_in{
+		width: 100%;
 		max-width: 1150px;//基本は1150px
 		padding: 0px 20px;
 		margin: 0 auto;

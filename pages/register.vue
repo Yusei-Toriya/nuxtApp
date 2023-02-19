@@ -1,24 +1,28 @@
 <template>
   <section class="l-sec">
     <div class="l-sec_in">
-      <div class="p-memoWrapper">
-        <h1>ユーザ登録</h1>
+      <div class="p-userForm">
+        <h1 class="c-title">ユーザ登録</h1>
         <form @submit.prevent="registerUser">
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input v-model="user.name">
+          <div class="_cnt">
+            <label for="name">名前</label>
+            <input class="c-input" v-model="user.name">
           </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input v-model="user.email">
+          <div class="_cnt">
+            <label for="email">メールアドレス</label>
+            <input class="c-input" v-model="user.email">
           </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" v-model="user.password">
+          <div class="_cnt">
+            <label for="password">パスワード</label>
+            <input class="c-input" type="password" v-model="user.password">
           </div>
-          <button type="submit">登録</button>
+          <div class="c-btnBox -multi">
+            <RouterbackButton />
+            <div class="c-btn -forward">
+              <button type="submit">登録</button>
+            </div>
+          </div>
         </form>
-        <RouterbackButton />
       </div>
     </div>
   </section>
@@ -39,13 +43,42 @@
       },
       methods:{
         registerUser(){
-          this.$axios.post('/auth/register',this.user)
-          .then((response: any) => {
-            this.$auth.loginWith('local',{
-              data: this.user
+          const name = this.user.name
+          const email = this.user.email
+          const password = this.user.password
+          if (name && email && password) {
+            this.$axios.post('/auth/register',this.user)
+            .then(() => {
+              this.$auth.loginWith("local", {
+                data: this.user,
+              })
+              this.$store.commit('setMessage', 'ログインしました')
+              this.$store.commit('setIsSuccess', true)
+              this.$store.commit('setIsShow', true)
+              this.$nuxt.$router.push('/mypage')
+              setTimeout(() => {
+                this.$store.commit('setMessage', '')
+                this.$store.commit('setIsShow', false)
+                this.$store.commit('setIsSuccess', null)
+              }, 3000);
             })
-            this.$nuxt.$router.push('/mypage')
-          })
+            .catch((error) => {
+              const errorStatus = error.response.status;
+              if(errorStatus === 401){
+                this.$store.commit('setMessage', 'ユーザー情報の登録に失敗しました')
+                this.$store.commit('setIsSuccess', false)
+                this.$store.commit('setIsShow', true)
+                setTimeout(() => {
+                  this.$store.commit('setMessage', '')
+                  this.$store.commit('setIsSuccess', false)
+                  this.$store.commit('setIsShow', false)
+                }, 3000);
+              }
+            });
+          }
+          else {
+            alert('必須項目を入力してください')
+          }
         },
       },
       components: { RouterbackButton }
