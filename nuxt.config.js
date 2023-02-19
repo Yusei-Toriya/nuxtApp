@@ -42,6 +42,7 @@ export default {
     // base: "/",
     // register: "/register",
   },
+  layout: 'default',
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/dotenv',
