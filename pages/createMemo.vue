@@ -1,34 +1,41 @@
 <template>
-  <section class="l-sec">
-    <div class="l-sec_in">
-      <div class="p-memoWrapper">
-        <h1 class="c-title">新規メモ作成</h1>
-        <form @submit.prevent="createMemo">
-          <div class="p-memoForm">
-            <dl>
-              <dt>
-                メモタイトル
-              </dt>
-              <dd>
-                <input class="c-input" type="text" v-model="memo.memo_title"/>
-              </dd>
-            </dl>
-            <dl>
-              <dt>
-                メモ詳細
-              </dt>
-              <dd>
-                <textarea class="c-input" type="text" v-model="memo.memo_detail"></textarea>
-              </dd>
-            </dl>
-            <button class="c-btn" type="submit">メモ登録</button>
-            <button class="c-btn" @click="cancel()">キャンセル</button>
-          </div>
-        </form>
-        <RouterbackButton />
+  <div class="l-wrapper">
+    <section class="l-sec">
+      <div class="l-sec_in">
+        <div class="p-memoWrapper">
+          <h1 class="c-title">新規メモ作成</h1>
+          <form @submit.prevent="createMemo">
+            <div class="p-memoForm">
+              <dl>
+                <dt>
+                  メモタイトル
+                </dt>
+                <dd>
+                  <input class="c-input" type="text" v-model="memo.memo_title"/>
+                </dd>
+              </dl>
+              <dl>
+                <dt>
+                  メモ詳細
+                </dt>
+                <dd>
+                  <textarea type="textField" class="c-textarea" v-model="memo.memo_detail"></textarea>
+                </dd>
+              </dl>
+            </div>
+            <div class="p-buttonWrapper">
+              <div class="c-btnBox -multi">
+                <RouterbackButton />
+                <button class="c-btn -forward" type="submit">
+                  <span>メモ登録</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
   
 <script lang="ts">
@@ -46,19 +53,24 @@
       methods: {
         createMemo(){
           const memo_title = this.memo.memo_title
-          const memo_detail = this.memo.memo_title
+          const memo_detail = this.memo.memo_detail
           if (memo_title && memo_detail) {
             this.$axios.post('/memo/createMemo', this.memo)
             .then((res: any) => {
+              this.$store.commit('setMessage', 'メモを登録しました')
+              this.$store.commit('setIsSuccess', true)
+              this.$store.commit('setIsShow', true)
               this.$nuxt.$router.push('/mypage')
+              setTimeout(() => {
+              this.$store.commit('setMessage', '')
+              this.$store.commit('setIsShow', false)
+              this.$store.commit('setIsSuccess', null)
+            }, 3000);
             })
           }
           else {
             alert('必須項目を入力してください')
           }
-        },
-        cancel(){
-          this.$nuxt.$router.push('/mypage')
         },
       },
       components: { RouterbackButton }

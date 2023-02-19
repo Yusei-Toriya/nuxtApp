@@ -8,23 +8,44 @@
 @import "/assets/scss/_mixin.scss";
 
 .p-memoWrapper{
-  width: fit-content;
+  width: 100%;
   margin: auto;
 }
 
 .p-memoForm{
   position: relative;
-	width: 100%;
-  min-width: 80vw;
-	padding: 20px 0px 0px 0px;
+	width: 80%;
+  max-width: 900px;
+	padding: 20px 5px 20px 5px;
+  margin: auto;
+  @include mq-max(){
+    width: 100%;
+  }
   >dl{
+    margin-top: 20px;
     >dt{
-
     }
     >dd{
-      
     }
     
+  }
+}
+
+.p-userForm{
+  position: relative;
+	width: 80%;
+  max-width: 900px;
+	padding: 20px 5px 20px 5px;
+  margin: auto;
+  @include mq-max(){
+    width: 100%;
+  }
+  ._cnt{
+    margin: 20px auto 0;
+    width: 60%;
+    @include mq-max(){
+      width: 100%;
+    }
   }
 }
 
@@ -32,10 +53,10 @@
   width: fit-content;
   margin: 40px auto;
   display: flex;
-  >nav{
-    display: flex;
-    flex-direction: column;
-  }
+  // >nav{
+  //   display: flex;
+  //   flex-direction: column;
+  // }
 }
 
 .p-error{

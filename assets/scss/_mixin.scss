@@ -14,13 +14,13 @@ media query print
 /* -----------------------------------
 media query ver1
 ------------------------------------ */
-@mixin mq-max($breakpoint:589) {
+@mixin mq-max($breakpoint:768) {
   @media screen and (max-width: $breakpoint+px) {
     @content;
   }
 }
 
-@mixin mq-min($breakpoint:590) {
+@mixin mq-min($breakpoint:769) {
   @media screen and (min-width: $breakpoint+px) {
     @content;
   }

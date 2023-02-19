@@ -1,0 +1,8 @@
+{
+  "CommonMessage": {
+    "description": "Auto imported from components/common/CommonMessage.vue"
+  },
+  "CommonButtonRouterbackButton": {
+    "description": "Auto imported from components/common/button/RouterbackButton.vue"
+  }
+}

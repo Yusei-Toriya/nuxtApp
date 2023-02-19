@@ -3,9 +3,6 @@
     <div class="l-sec_in">
       <div class="p-memoWrapper">
         <h1 class="c-title">メモ編集</h1>
-        <!-- <h1 class="c-title">「{{$auth.user.name}}」さんのメモ一覧</h1>
-        <h1 class="c-title">「{{$auth.user.id}}」さんのメモ一覧</h1> -->
-        <!-- <form @submit.prevent="createMemo"> -->
         <form @submit.prevent="editMemo">
           <div class="p-memoForm">
             <input type="hidden" v-model="memo.memo_id">
@@ -25,15 +22,17 @@
                 <textarea class="c-textarea" type="text" v-model="memo.memo_detail" required></textarea>
               </dd>
             </dl>
-            <button class="c-btn" type="submit">
-              <span>メモ更新</span>
-            </button>
-            <button class="c-btn -delete" @click="deleteMemo(memo.memo_id)">
-              <span>削除</span>
+            <div class="c-btnBox -multi">
+              <RouterbackButton />
+              <button class="c-btn -forward" type="submit">
+                <span>メモ更新</span>
+              </button>
+            </div>
+            <button class="c-btn -delete" @click="deleteMemo(memo.memo_id)" type="button">
+              <span>削除する</span>
             </button>
           </div>
         </form>
-        <RouterbackButton />
       </div>
     </div>
   </section>
@@ -41,7 +40,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import axios from 'axios'
 
 import RouterbackButton from "~/components/common/button/RouterbackButton.vue";
 
@@ -58,35 +56,11 @@ export default Vue.extend({
       },
     }
   },
-  // async asyncData ({ params }) {
-  //   console.log('params.id')
-  //   console.log(params.id)
-  //   try{
-  //     const { data } = await axios.get(`http://localhost:5000/memo/${params.id}`, {
-  //       headers: {
-  //         authorization: 'Bearer ' + this.$auth.getToken()
-  //         // authorization: 'Bearer ' + this.$auth
-  //       }
-  //     })
-  //     console.log(data[0])
-  //     return {
-  //       memo: data[0]
-  //     }
-  //   }
-  //   catch(error){
-  //     console.error(error)
-  //   }
-  // },
   
   async mounted() {
-    const id: any = this.$route.params.id;
-    // const { data } = await this.$axios.get('/memo/getOneMemo${params.id}', id)
-    // const { data } = await this.$axios.get(`/memo/${id}`)
-    // const { data } = await this.$axios.post('/memo/getOneMemo', {id})
-    // this.memo = data
-    // return{
-    //   memo: data[0]
-    // }
+    // const paramId: string = this.$route.params.id;
+    const id: string = this.$route.params.id;
+    // const id = Number(paramId); 
     try {
       const { data } = await this.$axios.get(`/memo/${id}`)
       this.memo = data.results[0]
@@ -97,10 +71,18 @@ export default Vue.extend({
   },
   methods: {
     async editMemo(){
-      console.log(this.memo)
       this.$axios.post('/memo/editMemo', this.memo)
       .then((res: any) => {
+        this.$store.commit('setMessage', 'メモを更新しました')
+        this.$store.commit('setIsSuccess', true)
+        this.$store.commit('setIsShow', true)
         this.$nuxt.$router.push('/mypage')
+        setTimeout(() => {
+          this.$store.commit('setMessage', '')
+          this.$store.commit('setIsShow', false)
+          this.$store.commit('setIsSuccess', null)
+        }, 3000);
+        // this.$nuxt.$router.push('/mypage')
       })
     },
     async deleteMemo(memoId: number){
@@ -108,10 +90,17 @@ export default Vue.extend({
         try{
           this.$axios.post('/memo/deleteMemo', {memoId})
           .then((res: any) => {
+            this.$store.commit('setMessage', 'メモを削除しました')
+            this.$store.commit('setIsSuccess', true)
+            this.$store.commit('setIsShow', true)
+            // this.$nuxt.$router.push('/mypage')
+            setTimeout(() => {
+              this.$store.commit('setMessage', '')
+              this.$store.commit('setIsShow', false)
+              this.$store.commit('setIsSuccess', null)
+            }, 3000);
             this.$nuxt.$router.push('/mypage')
           })
-          // const { data } = await this.$axios.get('/auth/getAllMemos')
-          //   this.memo = data
         }
         catch(error) {
           console.log(error)
