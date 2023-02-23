@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const state = {
   message: "",
@@ -9,44 +9,32 @@ const state = {
   isShow: false,
 };
 const mutations = {
-  setMessage(state, message) {
-    state.message = message
+  setMessage(state: { message: String }, message: String) {
+    state.message = message;
   },
-  setIsSuccess(state, isSuccess) {
-    state.isSuccess = isSuccess
+  setIsSuccess(state: { isSuccess: any }, isSuccess: any) {
+    state.isSuccess = isSuccess;
   },
-  setIsShow(state, isShow) {
-    state.isShow = isShow
+  setIsShow(state: { isShow: any }, isShow: any) {
+    state.isShow = isShow;
   },
-  // setMessage(state, message) {
-  //   state.message = message;
-  // },
-  clearMessage(state){
+  clearMessage(state: { message: string }) {
     state.message = "";
   },
-  // setIsShow(state, isShow) {
-  //   state.isShow = isShow;
-  // },
-  // clearIsShow(state){
-  //   state.isShow = false;
-  // },
-  // setIsSuccess(state, isSuccess){
-  //   state.isSuccess = isSuccess;
-  // },
 };
 const actions = {
-  setMessage({commit}, message) {
-    commit('setMessage', message);
+  setMessage(commit: any, message: String) {
+    commit("setMessage", message);
   },
-  setIsShow({commit}, isShow) {
-    commit('setIsShow', isShow);
+  setIsShow(commit: any, isShow: any) {
+    commit("setIsShow", isShow);
   },
-  setIsSuccess({commit}, isSuccess){
-    commit('setIsSuccess', isSuccess);
+  setIsSuccess(commit: any, isSuccess: any) {
+    commit("setIsSuccess", isSuccess);
   },
 };
 export default {
   state,
   mutations,
-  actions
+  actions,
 };

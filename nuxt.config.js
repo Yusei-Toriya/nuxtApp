@@ -96,6 +96,11 @@ export default {
             method: "get",
             propertyName: "user",
           },
+          userExist: {
+            url: "/auth/userExist",
+            method: "get",
+            propertyName: "user",
+          },
         },
       },
       tokenRequired: true,

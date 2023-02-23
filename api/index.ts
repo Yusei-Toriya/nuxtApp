@@ -2,61 +2,70 @@
 Express起動
 npx ts-node api/index.ts
 */
-require('dotenv').config();
-const path = require('path')
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const app = express()
-const port = 5000
-const mysql = require('mysql');
-const router = express.Router();
-const bcrypt = require('bcrypt');
+require("dotenv").config();
+// const path = require('path');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const app = express();
+const port = 5000;
+const mysql = require("mysql");
+// const router = express.Router();
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
+const jwt = require("jsonwebtoken");
+// const axios = require("axios");
 
-app.use(cors())
-app.use(bodyParser.json())
+app.use(cors());
+app.use(bodyParser.json());
 
 // DB接続情報
 const connectionInfo = mysql.createConnection({
   host: process.env.HOST,
   user: process.env.USER,
   password: process.env.PASSWORD,
-  database: process.env.DATABASE
+  database: process.env.DATABASE,
 });
 
-
-// connectionInfo.connect(function(error: any) {
-//   if (error) throw error;
-  // connectionInfo.query("SELECT * FROM users", function (error: any, results: any) {
-  //   console.log(results)
-  // });
-//   console.log('Connected');
-// });
-
-
-//ユーザー情報登録
-app.post("/auth/register", function (req: any, res: any, next: any) {
-  console.log("登録処理")
-  const insert = 'INSERT INTO USERS (name, email, password, del_flg) VALUES (?,?,?,?)'
-  bcrypt.hash(req.body.password, saltRounds, (err: any, hash: any) => {
-    connectionInfo.query(insert, [req.body.name, req.body.email, hash, 0],(err: any) => {
-      if (err) {
-        return res.status(400).json({"error":err.message});
-      }
-      return res.json({
-        "message": "ユーザー登録に成功しました",
-        "data": [req.body.name, req.body.email]
-      })
-    })
-  })
+// ユーザー情報登録
+app.post("/auth/register", function (request: any, response: any) {
+  // ユーザー存在確認(emailの存在確認)
+  const inputEmail: string = request.body.email;
+  const select = "SELECT * FROM users WHERE email = ?";
+  connectionInfo.query(select, inputEmail, function (error: any, user: any) {
+    if (error) {
+      return response.status(400).json({
+        error,
+      });
+    } else if (user.length !== 0) {
+      return response.status(401).json({
+        message: "このメールアドレスは既に登録されています",
+      });
+    }
+    // emailがDBに存在しない場合はユーザー登録処理を行う
+    else if (!user || user.length === 0) {
+      const insert =
+        "INSERT INTO USERS (name, email, password, del_flg) VALUES (?,?,?,?)";
+      bcrypt.hash(request.body.password, saltRounds, (hash: any) => {
+        connectionInfo.query(
+          insert,
+          [request.body.name, request.body.email, hash, 0],
+          (error: any) => {
+            if (error) {
+              return response.status(400).json({
+                error,
+              });
+            }
+          }
+        );
+      });
+    }
+  });
 });
 
-//ユーザー情報削除(論理削除)
-// app.delete("/delete/:id", function (req: any, res: any, next: any) {
-//   const id = req.params.id;
+// ユーザー情報削除(論理削除)
+// app.delete("/delete/:id", function (request: any, response: any, next: any) {
+//   const id = request.params.id;
 //   const update = 'UPDATE USERS SET del_flg=1 WHERE user_id = ?'
 //   connectionInfo.query(update, [id], function (
 //     error: any,
@@ -81,180 +90,198 @@ app.post("/auth/register", function (req: any, res: any, next: any) {
 //   });
 // });
 
-//ログイン
-app.post("/auth/login", function (req: any, res: any, next: any) {
-  const inputEmail: string = req.body.email;
-  const inputPassword: string = req.body.password;
-  console.log(inputEmail)
-  const select = 'select * from users where email = ?'
-  connectionInfo.query(select, inputEmail, function (error: any, user: any){
+// ログイン
+app.post("/auth/login", function (request: any, response: any) {
+  const inputEmail: string = request.body.email;
+  const inputPassword: string = request.body.password;
+  const select = "SELECT * FROM users WHERE email = ?";
+  connectionInfo.query(select, inputEmail, function (error: any, user: any) {
     if (error) {
-      return res.status(400).json({
-        status: "400 Bad Request",
-        error: error,
+      return response.status(400).json({
+        error,
       });
-    }
-    else if (!user || user.length === 0) {
-      return res.status(401).json({
+    } else if (!user || user.length === 0) {
+      return response.status(401).json({
         message: "メールアドレスが間違っています。",
       });
-    }
-    else{
-      bcrypt.compare(inputPassword, user[0].password, function (error: any, results: any) {
-        if (error) {
-          return res.status(400).json({
-            error: error.message,
+    } else {
+      bcrypt.compare(
+        inputPassword,
+        user[0].password,
+        function (error: any, results: any) {
+          if (error) {
+            return response.status(400).json({
+              error: error.message,
+            });
+          }
+          if (!results) {
+            return response.status(401).json({
+              message: "パスワードが間違っています。",
+            });
+          }
+          // Tokenの発行
+          const payload = {
+            id: user[0].user_id,
+            name: user[0].name,
+            email: user[0].email,
+          };
+          const token = jwt.sign(payload, "secret");
+          return response.json({
+            token,
+            message: "ログインしました",
           });
         }
-        if (!results) {
-          return res.status(401).json({
-            message: "パスワードが間違っています。",
-          });
-        }
-        //Tokenの発行
-        const payload = {
-          id: user[0].user_id,
-          name: user[0].name,
-          email: user[0].email,
-        };
-        const token = jwt.sign(payload, "secret");
-        return res.json({ token });
-      });
+      );
     }
   });
 });
 
-//Token確認
-app.get("/auth/user", (req: any, res: any) => {
-  const bearToken = req.headers["authorization"];
+// Token確認
+app.get("/auth/user", (request: any, response: any) => {
+  const bearToken = request.headers.authorization;
   const bearer = bearToken.split(" ");
   const token = bearer[1];
-  jwt.verify(token,'secret',(err: any, user: any)=>{
-    if(err){
-      return res.sendStatus(403)
-    }else{
-      return res.json({
-        user
+  jwt.verify(token, "secret", (error: any, user: any) => {
+    if (error) {
+      return response.sendStatus(403);
+    } else {
+      return response.json({
+        user,
       });
     }
   });
 });
 
 // ログインユーザーのメモ一覧取得
-app.get("/memo/getAllMemos", function (req: any, res: any, next: any) {
-  const bearToken = req.headers["authorization"];
+app.get("/memo/getAllMemos", function (request: any, response: any) {
+  const bearToken = request.headers.authorization;
   const bearer = bearToken.split(" ");
   const token = bearer[1];
-  const decodedToken = jwt.verify(token,'secret');
+  const decodedToken = jwt.verify(token, "secret");
   const user_id = decodedToken.id;
-  const select = 'SELECT memo_id, memo_title, memo_detail, created_date FROM memo WHERE user_id = ? AND del_flg = 0 ORDER BY memo_id DESC'
+  const select =
+    "SELECT memo_id, memo_title, memo_detail, created_date FROM memo WHERE user_id = ? AND del_flg = 0 ORDER BY memo_id DESC";
   connectionInfo.query(select, user_id, function (error: any, results: any) {
     if (error) {
-      throw error;
-    }
-    const memo_count: number = results.length
-    if (memo_count != 0) {
-      return res.status(200).json({
-        results, memo_count
+      return response.status(400).json({
+        error,
       });
     }
-    else {
-      return res.status(200).json({
-        results, memo_count
+    if (results) {
+      const memo_count: number = results.length;
+      return response.status(200).json({
+        results,
+        memo_count,
       });
     }
   });
 });
 
 // ログインユーザーのメモ取得(1件)
-// app.get("/memo/getOneMemo", function (req: any, res: any, next: any) {
-app.get("/memo/:id", function (req: any, res: any, next: any) {
-  const bearToken = req.headers["authorization"];
+app.get("/memo/:id", function (request: any, response: any) {
+  const bearToken = request.headers.authorization;
   const bearer = bearToken.split(" ");
   const token = bearer[1];
-  const decodedToken = jwt.verify(token,'secret');
+  const decodedToken = jwt.verify(token, "secret");
   const user_id: number = decodedToken.id;
-  const memo_id: number = req.params.id;
+  const memo_id: number = request.params.id;
 
-  const select = 'SELECT memo_id, user_id, memo_title, memo_detail FROM memo WHERE user_id = ? AND memo_id = ? AND del_flg = 0'
-  connectionInfo.query(select, [user_id, memo_id], function (error: any, results: any, fields: any) {
-    if (error) {
-      return res.status(400).json({
-        error: error
+  const select =
+    "SELECT memo_id, user_id, memo_title, memo_detail FROM memo WHERE user_id = ? AND memo_id = ? AND del_flg = 0";
+  connectionInfo.query(
+    select,
+    [user_id, memo_id],
+    function (error: any, results: any) {
+      if (error) {
+        return response.status(400).json({
+          error,
+        });
+      }
+      return response.status(200).json({
+        results,
       });
     }
-    return res.status(200).json({
-      results
+  );
+});
+
+// メモ新規作成
+app.post("/memo/createMemo", function (request: any, response: any) {
+  const bearToken: string = request.headers.authorization;
+  const bearer: any = bearToken.split(" ");
+  const token: any = bearer[1];
+  const decodedToken: any = jwt.verify(token, "secret");
+  const user_id: number = decodedToken.id;
+  const memo_title: string = request.body.memo_title;
+  const memo_detail: string = request.body.memo_detail;
+  const del_flg: number = 0;
+  const insert: string =
+    "INSERT INTO MEMO (user_id, memo_title, memo_detail, del_flg) VALUES (?,?,?,?)";
+  connectionInfo.query(
+    insert,
+    [user_id, memo_title, memo_detail, del_flg],
+    (error: any) => {
+      if (error) {
+        return response.status(400).json({ error: error.message });
+      }
+      return response.json({
+        message: "メモの登録に成功しました",
+      });
+    }
+  );
+});
+
+// メモ編集
+app.post("/memo/editMemo", function (request: any, response: any) {
+  const bearToken: string = request.headers.authorization;
+  const bearer: any = bearToken.split(" ");
+  const token: any = bearer[1];
+  const decodedToken: any = jwt.verify(token, "secret");
+  const memo_title: string = request.body.memo_title;
+  const memo_detail: string = request.body.memo_detail;
+  const memo_id: number = request.body.memo_id;
+  const user_id: number = decodedToken.id;
+  const update: string =
+    "UPDATE memo SET memo_title = ?, memo_detail = ? WHERE memo_id = ? AND user_id = ?";
+  connectionInfo.query(
+    update,
+    [memo_title, memo_detail, memo_id, user_id],
+    (error: any) => {
+      if (error) {
+        return response.status(400).json({
+          error,
+        });
+      }
+      return response.json({
+        message: "メモの更新に成功しました",
+      });
+    }
+  );
+});
+
+// メモ削除
+app.post("/memo/deleteMemo", function (request: any, response: any) {
+  const bearToken: string = request.headers.authorization;
+  const bearer: any = bearToken.split(" ");
+  const token: any = bearer[1];
+  const decodedToken: any = jwt.verify(token, "secret");
+  const memo_id: any = request.body.memoId;
+  const user_id: number = decodedToken.id;
+  const update: string =
+    "UPDATE memo SET del_flg = 1 WHERE memo_id = ? AND user_id = ?";
+  connectionInfo.query(update, [memo_id, user_id], (error: any) => {
+    if (error) {
+      return response.status(400).json({
+        error,
+      });
+    }
+    return response.json({
+      message: "メモの削除に成功しました",
     });
   });
 });
 
-// メモ新規作成
-app.post("/memo/createMemo", function (req: any, res: any, user: any) {
-  const bearToken: string = req.headers["authorization"];
-  const bearer: any = bearToken.split(" ");
-  const token: any = bearer[1];
-  const decodedToken: any = jwt.verify(token,'secret');
-  const user_id: number = decodedToken.id;
-  const memo_title: string = req.body.memo_title;
-  const memo_detail: string = req.body.memo_detail;
-  const del_flg: number = 0;
-  const insert: string = 'INSERT INTO MEMO (user_id, memo_title, memo_detail, del_flg) VALUES (?,?,?,?)';
-  connectionInfo.query(insert, [user_id, memo_title, memo_detail, del_flg],(err: any) => {
-    if (err) {
-      return res.status(400).json({"error":err.message});
-    }
-    return res.json({
-      "message": "メモの登録に成功しました",
-      "data": [req.body.memo_title, req.body.memo_detail]
-    })
-  })
+app.listen(port, () => {
+  console.log(`${port}番のポートで待機中です...`);
 });
-
-
-// メモ編集
-app.post("/memo/editMemo", function (req: any, res: any, user: any) {
-  const bearToken: string = req.headers["authorization"];
-  const bearer: any = bearToken.split(" ");
-  const token: any = bearer[1];
-  const decodedToken: any = jwt.verify(token,'secret');
-  const memo_title: string = req.body.memo_title;
-  const memo_detail: string = req.body.memo_detail;
-  const memo_id: number = req.body.memo_id;
-  const user_id: number = decodedToken.id;
-  // const del_flg: number = 0;
-  const update: string = 'UPDATE memo SET memo_title = ?, memo_detail = ? WHERE memo_id = ? AND user_id = ?';
-  connectionInfo.query(update, [memo_title, memo_detail, memo_id, user_id],(err: any) => {
-    if (err) {
-      return res.status(400).json({"error":err.message});
-    }
-    return res.json({
-      "message": "メモの更新に成功しました",
-      "data": [req.body.memo_title, req.body.memo_detail]
-    })
-  })
-});
-
-// メモ削除
-app.post("/memo/deleteMemo", function (req: any, res: any, user: any) {
-  const bearToken: string = req.headers["authorization"];
-  const bearer: any = bearToken.split(" ");
-  const token: any = bearer[1];
-  const decodedToken: any = jwt.verify(token,'secret');
-  const memo_id: any = req.body.memoId;
-  const user_id: number = decodedToken.id;
-  const update: string = 'UPDATE memo SET del_flg = 1 WHERE memo_id = ? AND user_id = ?';
-  connectionInfo.query(update, [memo_id, user_id], (err: any) => {
-    if (err) {
-      return res.status(400).json({"error":err.message});
-    }
-    return res.json({
-      "message": "メモの削除に成功しました",
-      "data": [req.body.memo_title, req.body.memo_detail]
-    })
-  })
-});
-
-app.listen(port, () => { console.log(`${port}番のポートで待機中です...`);})
 
 module.exports = app;

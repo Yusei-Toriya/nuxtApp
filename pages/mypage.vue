@@ -3,23 +3,29 @@
     <div class="l-sec_in">
       <div class="p-memoWrapper">
         <div v-if="$auth.user != null">
-          <h1 class="c-title">{{$auth.user.name}}さんのメモ一覧</h1>
+          <h1 class="c-title">{{ $auth.user.name }}さんのメモ一覧</h1>
           <div class="p-memoList">
-            <div class="p-error" v-if="memo.memo_count == null">
-            </div>
+            <div class="p-error" v-if="memo.memo_count == null"></div>
             <div class="p-error" v-if="memo.memo_count == 0">
               <p class="c-error">メモがありません</p>
             </div>
             <ul class="_itemList">
-              <li v-for="memo in $data.memo.results" :key="memo.memo_id" class="_item">
+              <li
+                v-for="memo in $data.memo.results"
+                :key="memo.memo_id"
+                class="_item"
+              >
                 <article class="_cnt">
                   <div class="_memoDeleteBtn">
-                    <button class="c-btn -deleteIcon" @click="deleteMemo(memo.memo_id)">
+                    <button
+                      class="c-btn -deleteIcon"
+                      @click="deleteMemo(memo.memo_id)"
+                    >
                       <span></span>
                     </button>
                   </div>
-                  <h2 class="_memoTitle">{{memo.memo_title}}</h2>
-                  <p class="_memoDetail">{{memo.memo_detail}}</p>
+                  <h2 class="_memoTitle">{{ memo.memo_title }}</h2>
+                  <p class="_memoDetail">{{ memo.memo_detail }}</p>
                   <div class="_memoEditBtn">
                     <router-link :to="'/memo/' + memo.memo_id" type="button">
                       <button class="c-btn -viewIcon">
@@ -69,64 +75,70 @@
 <script lang="ts">
 import Vue from "vue";
 
-
 export default Vue.extend({
   // ログイン後にのみ、このページに入れるようにする
   middleware: "auth",
-  
-  data () {
+
+  data() {
     return {
       memo: {
-        memo_id: '',
-        memo_title: '',
-        memo_detail: '',
+        memo_id: "",
+        memo_title: "",
+        memo_detail: "",
         memo_count: null,
-      }
-    }
+      },
+    };
   },
   methods: {
-    async deleteMemo(memoId: number){
-      if (confirm('選択したメモを削除します')) {
-        try{
-          this.$axios.post('/memo/deleteMemo', {memoId})
-          .then((res: any) => {
-            this.$store.commit('setMessage', 'メモを削除しました')
-            this.$store.commit('setIsSuccess', true)
-            this.$store.commit('setIsShow', true)
-            setTimeout(() => {
-              this.$store.commit('setMessage', '')
-              this.$store.commit('setIsShow', false)
-              this.$store.commit('setIsSuccess', null)
-              location.reload();
-            }, 3000);
-          })
-        }
-        catch(error) {
-          console.log(error)
+    async deleteMemo(memoId: number) {
+      if (confirm("選択したメモを削除します")) {
+        try {
+          this.$axios
+            .post("/memo/deleteMemo", { memoId })
+            .then((response: any) => {
+              const message = response.data.message;
+              this.$store.commit("setMessage", message);
+              this.$store.commit("setIsSuccess", true);
+              this.$store.commit("setIsShow", true);
+              setTimeout(() => {
+                this.$store.commit("setMessage", "");
+                this.$store.commit("setIsShow", false);
+                this.$store.commit("setIsSuccess", null);
+                location.reload();
+              }, 3000);
+            });
+        } catch (error) {
+          this.$store.commit("setMessage", "メモの削除に失敗しました");
+          this.$store.commit("setIsSuccess", false);
+          this.$store.commit("setIsShow", true);
+          setTimeout(() => {
+            this.$store.commit("setMessage", "");
+            this.$store.commit("setIsShow", false);
+            this.$store.commit("setIsSuccess", null);
+            location.reload();
+          }, 3000);
         }
       }
     },
-    editMemo(memo_id: number){
-      this.$router.push(`/memo/${memo_id}`)
+    editMemo(memo_id: number) {
+      this.$router.push(`/memo/${memo_id}`);
     },
-    userLogout(){
-      this.$auth.logout()
-      .then(()=>{
-        this.$store.commit('setMessage', 'ログアウトしました')
-        this.$store.commit('setIsSuccess', true)
-        this.$store.commit('setIsShow', true)
+    userLogout() {
+      this.$auth.logout().then(() => {
+        this.$store.commit("setMessage", "ログアウトしました");
+        this.$store.commit("setIsSuccess", true);
+        this.$store.commit("setIsShow", true);
         setTimeout(() => {
-          this.$store.commit('setMessage', '')
-          this.$store.commit('setIsShow', false)
-          this.$store.commit('setIsSuccess', null)
+          this.$store.commit("setMessage", "");
+          this.$store.commit("setIsShow", false);
+          this.$store.commit("setIsSuccess", null);
         }, 3000);
-      })
+      });
     },
   },
   async mounted() {
-    const { data } = await this.$axios.get('/memo/getAllMemos')
-    console.log(data);
-    this.memo = data
+    const { data } = await this.$axios.get("/memo/getAllMemos");
+    this.memo = data;
   },
 });
 </script>
