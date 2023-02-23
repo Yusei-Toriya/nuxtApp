@@ -35,7 +35,7 @@ import RouterbackButton from "~/components/common/button/RouterbackButton.vue";
 
 export default Vue.extend({
   async mounted() {
-    this.$router.push("/login")
+    this.$router.push("/login");
   },
 });
 </script>
