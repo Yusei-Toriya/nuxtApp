@@ -3,18 +3,15 @@ Express起動
 npx ts-node api/index.ts
 */
 require("dotenv").config();
-// const path = require('path');
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const port = 5000;
 const mysql = require("mysql");
-// const router = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
-// const axios = require("axios");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -63,33 +60,6 @@ app.post("/auth/register", function (request: any, response: any) {
   });
 });
 
-// ユーザー情報削除(論理削除)
-// app.delete("/delete/:id", function (request: any, response: any, next: any) {
-//   const id = request.params.id;
-//   const update = 'UPDATE USERS SET del_flg=1 WHERE user_id = ?'
-//   connectionInfo.query(update, [id], function (
-//     error: any,
-//     results: any
-//   ) {
-//     if (error) {
-//       res.status(500).json({
-//         status: "500 Internal Server Error",  error: error,
-//       });
-//     }
-//     if (results.rowCount === 0) {
-//       res.status(400).json({
-//         status: "400 Bad Request",
-//         message: "データが存在しません。",
-//       });
-//     } else {
-//       res.status(200).json({
-//         status: "success",
-//         message: "データを削除しました。",
-//       });
-//     }
-//   });
-// });
-
 // ログイン
 app.post("/auth/login", function (request: any, response: any) {
   const inputEmail: string = request.body.email;
@@ -102,7 +72,7 @@ app.post("/auth/login", function (request: any, response: any) {
       });
     } else if (!user || user.length === 0) {
       return response.status(401).json({
-        message: "メールアドレスが間違っています。",
+        message: "メールアドレスが間違っています",
       });
     } else {
       bcrypt.compare(
@@ -116,7 +86,7 @@ app.post("/auth/login", function (request: any, response: any) {
           }
           if (!results) {
             return response.status(401).json({
-              message: "パスワードが間違っています。",
+              message: "パスワードが間違っています",
             });
           }
           // Tokenの発行
