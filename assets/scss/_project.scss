@@ -21,13 +21,12 @@
   @include mq-max(){
     width: 100%;
   }
-  >dl{
-    margin-top: 20px;
-    >dt{
+  ._cnt{
+    margin: 20px auto 0;
+    width: 60%;
+    @include mq-max(){
+      width: 100%;
     }
-    >dd{
-    }
-    
   }
 }
 
@@ -53,10 +52,6 @@
   width: fit-content;
   margin: 40px auto;
   display: flex;
-  // >nav{
-  //   display: flex;
-  //   flex-direction: column;
-  // }
 }
 
 .p-error{

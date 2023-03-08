@@ -2,30 +2,20 @@
   <div class="l-wrapper">
     <section class="l-sec">
       <div class="l-sec_in">
-        <div class="p-memoWrapper">
+        <div class="p-memoForm">
           <h1 class="c-title">新規メモ作成</h1>
           <form @submit.prevent="createMemo">
-            <div class="p-memoForm">
-              <dl>
-                <dt>メモタイトル</dt>
-                <dd>
-                  <input
-                    class="c-input"
-                    type="text"
-                    v-model="memo.memo_title"
-                  />
-                </dd>
-              </dl>
-              <dl>
-                <dt>メモ詳細</dt>
-                <dd>
-                  <textarea
-                    type="textField"
-                    class="c-textarea"
-                    v-model="memo.memo_detail"
-                  ></textarea>
-                </dd>
-              </dl>
+            <div class="_cnt">
+              <label class="c-required" for="memo_title">
+                <span>メモタイトル</span>
+                <input class="c-input" type="text" v-model="memo.memo_title"/>
+              </label>
+            </div>
+            <div class="_cnt">
+              <label class="c-required" for="memo_detail">
+                <span>メモ詳細</span>
+                <textarea type="textField" class="c-textarea" v-model="memo.memo_detail"></textarea>
+              </label>
             </div>
             <div class="c-btnBox -multi">
               <RouterbackButton />
@@ -53,28 +43,42 @@ export default Vue.extend({
     };
   },
   methods: {
-    createMemo() {
-      const memo_title = this.memo.memo_title;
-      const memo_detail = this.memo.memo_detail;
+    createMemo(){
+      const memo_title: string = this.memo.memo_title;
+      const memo_detail: string = this.memo.memo_detail;
       if (memo_title && memo_detail) {
-        this.$axios
-          .post("/memo/createMemo", this.memo)
-          .then((response: any) => {
-            const message = response.data.message;
-            this.$store.commit("setMessage", message);
-            this.$store.commit("setIsSuccess", true);
+        this.$axios.post("/memo/createMemo", this.memo)
+        .then((response) => {
+          const message: string = response.data.message;
+          this.$store.commit("setMessage", message);
+          this.$store.commit("setIsSuccess", true);
+          this.$store.commit("setIsShow", true);
+          this.$nuxt.$router.push("/mypage");
+          setTimeout(() => {
+            this.$store.commit("setMessage", "");
+            this.$store.commit("setIsShow", false);
+            this.$store.commit("setIsSuccess", null);
+          }, 3000);
+        })
+        .catch((error) => {
+          const errorStatus = error.response.status;
+          const errorMessage = error.response.data.message;
+          if (errorStatus === 401) {
+            this.$store.commit("setMessage", errorMessage);
+            this.$store.commit("setIsSuccess", false);
             this.$store.commit("setIsShow", true);
-            this.$nuxt.$router.push("/mypage");
             setTimeout(() => {
               this.$store.commit("setMessage", "");
+              this.$store.commit("setIsSuccess", false);
               this.$store.commit("setIsShow", false);
-              this.$store.commit("setIsSuccess", null);
             }, 3000);
-          });
-      } else {
+          }
+        });
+      }
+      else {
         alert("必須項目を入力してください");
       }
-    },
+    }
   },
   components: { RouterbackButton },
 });
