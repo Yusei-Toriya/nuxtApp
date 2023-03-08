@@ -5,16 +5,12 @@
         <h1 class="c-title">メモ帳アプリ ログインページ</h1>
         <form @submit.prevent="userLogin">
           <div class="_cnt">
-            <label class="c-required" for="email">
-              <span>メールアドレス</span>
-              <input class="c-input" v-model="user.email" />
-            </label>
+            <label for="email">メールアドレス</label>
+            <input class="c-input" v-model="user.email" />
           </div>
           <div class="_cnt">
-            <label class="c-required" for="password">
-              <span>パスワード</span>
-              <input class="c-input" type="password" v-model="user.password" />
-            </label>
+            <label for="password">パスワード</label>
+            <input class="c-input" type="password" v-model="user.password" />
           </div>
           <div class="p-buttonWrapper">
             <div class="c-btn -forward">
@@ -56,33 +52,36 @@ export default Vue.extend({
       const email = this.user.email;
       const password = this.user.password;
       if (email && password) {
-        this.$auth.loginWith("local", {data: this.user,})
-        .then((response: any) => {
-          const message = response.data.message;
-          this.$store.commit("setMessage", message);
-          this.$store.commit("setIsSuccess", true);
-          this.$store.commit("setIsShow", true);
-          this.$nuxt.$router.push("/mypage");
-          setTimeout(() => {
-            this.$store.commit("setMessage", "");
-            this.$store.commit("setIsShow", false);
-            this.$store.commit("setIsSuccess", null);
-          }, 3000);
-        })
-        .catch((error) => {
-          const errorStatus = error.response.status;
-          const errorMessage = error.response.data.message;
-          if (errorStatus === 401) {
-            this.$store.commit("setMessage", errorMessage);
-            this.$store.commit("setIsSuccess", false);
+        this.$auth
+          .loginWith("local", {
+            data: this.user,
+          })
+          .then((response: any) => {
+            const message = response.data.message;
+            this.$store.commit("setMessage", message);
+            this.$store.commit("setIsSuccess", true);
             this.$store.commit("setIsShow", true);
+            this.$nuxt.$router.push("/mypage");
             setTimeout(() => {
               this.$store.commit("setMessage", "");
-              this.$store.commit("setIsSuccess", false);
               this.$store.commit("setIsShow", false);
+              this.$store.commit("setIsSuccess", null);
             }, 3000);
-          }
-        });
+          })
+          .catch((error) => {
+            const errorStatus = error.response.status;
+            const errorMessage = error.response.data.message;
+            if (errorStatus === 401) {
+              this.$store.commit("setMessage", errorMessage);
+              this.$store.commit("setIsSuccess", false);
+              this.$store.commit("setIsShow", true);
+              setTimeout(() => {
+                this.$store.commit("setMessage", "");
+                this.$store.commit("setIsSuccess", false);
+                this.$store.commit("setIsShow", false);
+              }, 3000);
+            }
+          });
       } else {
         alert("必須項目を入力してください");
       }

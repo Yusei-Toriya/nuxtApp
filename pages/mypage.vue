@@ -5,11 +5,8 @@
         <div v-if="$auth.user != null">
           <h1 class="c-title">{{ $auth.user.name }}さんのメモ一覧</h1>
           <div class="p-memoList">
-            <!-- <div class="p-error" v-if="memo.memo_count === null || memo.memo_count === 0"> -->
-            <!-- <div class="p-error" v-if="memo.memo_count === null">
-              <p class="c-error">メモがありません</p>
-            </div> -->
-            <div class="p-error" v-if="memo.memo_count === 0">
+            <div class="p-error" v-if="memo.memo_count == null"></div>
+            <div class="p-error" v-if="memo.memo_count == 0">
               <p class="c-error">メモがありません</p>
             </div>
             <ul class="_itemList">

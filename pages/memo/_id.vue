@@ -1,33 +1,53 @@
 <template>
   <section class="l-sec">
     <div class="l-sec_in">
-      <div class="p-memoForm">
+      <div class="p-memoWrapper">
         <h1 class="c-title">メモ編集</h1>
         <form @submit.prevent="editMemo">
+          <div class="p-memoForm">
             <input type="hidden" v-model="memo.memo_id" />
-            <div class="_cnt">
-              <label class="c-required" for="memo_title">
-                <span>メモタイトル</span>
-                <input class="c-input" type="text" v-model="memo.memo_title"/>
-              </label>
-            </div>
-            <div class="_cnt">
-              <label class="c-required" for="memo_detail">
-                <span>メモ詳細</span>
-                <textarea type="textField" class="c-textarea" v-model="memo.memo_detail"></textarea>
-              </label>
-            </div>
+            <dl>
+              <dt>
+                <label for="memo_title">メモタイトル</label>
+              </dt>
+              <dd>
+                <input
+                  class="c-input"
+                  type="text"
+                  v-model="memo.memo_title"
+                  required
+                />
+              </dd>
+            </dl>
+            <dl>
+              <dt>
+                <label for="memo_detail">メモ詳細</label>
+              </dt>
+              <dd>
+                <textarea
+                  class="c-textarea"
+                  type="text"
+                  v-model="memo.memo_detail"
+                  required
+                ></textarea>
+              </dd>
+            </dl>
             <div class="c-btnBox -multi">
               <RouterbackButton />
               <button class="c-btn -forward" type="submit">
                 <span>メモ更新</span>
               </button>
             </div>
-            <button class="c-btn -delete" @click="deleteMemo(memo.memo_id)" type="button">
+            <button
+              class="c-btn -delete"
+              @click="deleteMemo(memo.memo_id)"
+              type="button"
+            >
               <span>削除する</span>
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
+      </div>
     </div>
   </section>
 </template>
@@ -49,6 +69,7 @@ export default Vue.extend({
       },
     };
   },
+
   async mounted() {
     const id: string = this.$route.params.id;
     try {
@@ -60,25 +81,18 @@ export default Vue.extend({
   },
   methods: {
     async editMemo() {
-      const memo_title: string | undefined = this.memo?.memo_title;
-      const memo_detail: string | undefined = this.memo?.memo_detail;
-      if (memo_title && memo_detail) {
-        this.$axios.post("/memo/editMemo", this.memo).then((response: any) => {
-          const message = response.data.message;
-          this.$store.commit("setMessage", message);
-          this.$store.commit("setIsSuccess", true);
-          this.$store.commit("setIsShow", true);
-          this.$nuxt.$router.push("/mypage");
-          setTimeout(() => {
-            this.$store.commit("setMessage", "");
-            this.$store.commit("setIsShow", false);
-            this.$store.commit("setIsSuccess", null);
-          }, 3000);
-        });
-      }
-      else {
-        alert("必須項目を入力してください");
-      }
+      this.$axios.post("/memo/editMemo", this.memo).then((response: any) => {
+        const message = response.data.message;
+        this.$store.commit("setMessage", message);
+        this.$store.commit("setIsSuccess", true);
+        this.$store.commit("setIsShow", true);
+        this.$nuxt.$router.push("/mypage");
+        setTimeout(() => {
+          this.$store.commit("setMessage", "");
+          this.$store.commit("setIsShow", false);
+          this.$store.commit("setIsSuccess", null);
+        }, 3000);
+      });
     },
     async deleteMemo(memoId: number) {
       if (confirm("選択したメモを削除します")) {

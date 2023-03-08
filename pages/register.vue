@@ -5,22 +5,16 @@
         <h1 class="c-title">ユーザ登録</h1>
         <form @submit.prevent="registerUser">
           <div class="_cnt">
-            <label  class="c-required" for="name">
-              <span>名前</span>
-              <input class="c-input" v-model="user.name" />
-            </label>
+            <label for="name">名前</label>
+            <input class="c-input" v-model="user.name" />
           </div>
           <div class="_cnt">
-            <label class="c-required" for="email">
-              <span>メールアドレス</span>
-              <input class="c-input" v-model="user.email" />
-            </label>
+            <label for="email">メールアドレス</label>
+            <input class="c-input" v-model="user.email" />
           </div>
           <div class="_cnt">
-            <label class="c-required" for="password">
-              <span>パスワード</span>
-              <input class="c-input" type="password" v-model="user.password" />
-            </label>
+            <label for="password">パスワード</label>
+            <input class="c-input" type="password" v-model="user.password" />
           </div>
           <div class="c-btnBox -multi">
             <RouterbackButton />
@@ -53,8 +47,12 @@ export default Vue.extend({
       const email = this.user.email;
       const password = this.user.password;
       if (name && email && password) {
-          this.$axios.post("/auth/register", this.user).then((response: any) => {
-            this.$auth.loginWith("local", {data: this.user,});
+        this.$axios
+          .post("/auth/register", this.user)
+          .then(() => {
+            this.$auth.loginWith("local", {
+              data: this.user,
+            });
             this.$store.commit("setMessage", "ログインしました");
             this.$store.commit("setIsSuccess", true);
             this.$store.commit("setIsShow", true);
@@ -68,7 +66,7 @@ export default Vue.extend({
           .catch((error) => {
             const errorStatus = error.response.status;
             const errorMessage = error.response.data.message;
-            if (errorStatus === 401 || errorStatus === 400) {
+            if (errorStatus === 401) {
               this.$store.commit("setMessage", errorMessage);
               this.$store.commit("setIsSuccess", false);
               this.$store.commit("setIsShow", true);
@@ -79,8 +77,7 @@ export default Vue.extend({
               }, 3000);
             }
           });
-      }
-      else {
+      } else {
         alert("必須項目を入力してください");
       }
     },

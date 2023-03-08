@@ -302,10 +302,10 @@
 		width: 95%;
 	}
 	&.-success{
-		color: $color_blue;
+		color: blue;
 	}
 	&.-failed{
-		color: $color_red;
+		color: red;
 	}
 	&.-show{
 		opacity: 1;
@@ -319,16 +319,6 @@
 	}
 }
 
-.c-required{
-	>span{
-		position: relative;
-		&::before{
-			content: "※";
-			color: $color_red;
-			font-size: 1.1rem;
-			position: absolute;
-			top: -5px;
-			right: -10px;
-		}
-	}
-}
+// .c-nav{
+// 	border: 1px solid #dfdfdf;
+// }

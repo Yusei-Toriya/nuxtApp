@@ -38,6 +38,7 @@ export default {
   ],
   router: {
     middleware: ['auth'],
+    middleware: ['messages']
     // base: "/",
     // register: "/register",
   },

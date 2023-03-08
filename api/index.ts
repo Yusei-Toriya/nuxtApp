@@ -14,7 +14,7 @@ const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
-const axios = require("axios");
+// const axios = require("axios");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -37,35 +37,27 @@ app.post("/auth/register", function (request: any, response: any) {
       return response.status(400).json({
         error,
       });
-    } 
-    else if (user.length !== 0) {
+    } else if (user.length !== 0) {
       return response.status(401).json({
         message: "このメールアドレスは既に登録されています",
       });
     }
     // emailがDBに存在しない場合はユーザー登録処理を行う
     else if (!user || user.length === 0) {
-      bcrypt.hash(request.body.password, saltRounds, (error: any, hash: any) => {
-        if (error) {
-          return response.status(400).json({
-            error,
-          });
-        }
-        if (hash) {
-          const insert = "INSERT INTO USERS (name, email, password, del_flg) VALUES (?,?,?,?)";
-          connectionInfo.query(insert,[request.body.name, request.body.email, hash, 0],(error: any, result: any) => {
+      const insert =
+        "INSERT INTO USERS (name, email, password, del_flg) VALUES (?,?,?,?)";
+      bcrypt.hash(request.body.password, saltRounds, (hash: any) => {
+        connectionInfo.query(
+          insert,
+          [request.body.name, request.body.email, hash, 0],
+          (error: any) => {
             if (error) {
               return response.status(400).json({
                 error,
               });
             }
-            else{
-              return response.status(200).json({
-                result,
-              })
-            }
-          });
-        }
+          }
+        );
       });
     }
   });
@@ -102,7 +94,7 @@ app.post("/auth/register", function (request: any, response: any) {
 app.post("/auth/login", function (request: any, response: any) {
   const inputEmail: string = request.body.email;
   const inputPassword: string = request.body.password;
-  const select: string = "SELECT * FROM users WHERE email = ?";
+  const select = "SELECT * FROM users WHERE email = ?";
   connectionInfo.query(select, inputEmail, function (error: any, user: any) {
     if (error) {
       return response.status(400).json({
@@ -229,17 +221,11 @@ app.post("/memo/createMemo", function (request: any, response: any) {
     [user_id, memo_title, memo_detail, del_flg],
     (error: any) => {
       if (error) {
-        response.status(400).json({
-          error: error.message
-        });
-        return 
+        return response.status(400).json({ error: error.message });
       }
-      else {
-        response.status(200).json({
-          message: "メモの登録に成功しました",
-        });
-        return
-      }
+      return response.json({
+        message: "メモの登録に成功しました",
+      });
     }
   );
 });
@@ -286,7 +272,6 @@ app.post("/memo/deleteMemo", function (request: any, response: any) {
     if (error) {
       return response.status(400).json({
         error,
-        message: "メモの削除に失敗しました。",
       });
     }
     return response.json({
