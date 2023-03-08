@@ -5,8 +5,11 @@
         <div v-if="$auth.user != null">
           <h1 class="c-title">{{ $auth.user.name }}さんのメモ一覧</h1>
           <div class="p-memoList">
-            <div class="p-error" v-if="memo.memo_count == null"></div>
-            <div class="p-error" v-if="memo.memo_count == 0">
+            <!-- <div class="p-error" v-if="memo.memo_count === null || memo.memo_count === 0"> -->
+            <!-- <div class="p-error" v-if="memo.memo_count === null">
+              <p class="c-error">メモがありません</p>
+            </div> -->
+            <div class="p-error" v-if="memo.memo_count === 0">
               <p class="c-error">メモがありません</p>
             </div>
             <ul class="_itemList">
@@ -17,12 +20,12 @@
               >
                 <article class="_cnt">
                   <div class="_memoDeleteBtn">
-                    <button
+                    <!-- <button
                       class="c-btn -deleteIcon"
                       @click="deleteMemo(memo.memo_id)"
                     >
                       <span></span>
-                    </button>
+                    </button> -->
                   </div>
                   <h2 class="_memoTitle">{{ memo.memo_title }}</h2>
                   <p class="_memoDetail">{{ memo.memo_detail }}</p>
@@ -90,36 +93,35 @@ export default Vue.extend({
     };
   },
   methods: {
-    async deleteMemo(memoId: number) {
-      if (confirm("選択したメモを削除します")) {
-        try {
-          this.$axios
-            .post("/memo/deleteMemo", { memoId })
-            .then((response: any) => {
-              const message = response.data.message;
-              this.$store.commit("setMessage", message);
-              this.$store.commit("setIsSuccess", true);
-              this.$store.commit("setIsShow", true);
-              setTimeout(() => {
-                this.$store.commit("setMessage", "");
-                this.$store.commit("setIsShow", false);
-                this.$store.commit("setIsSuccess", null);
-                location.reload();
-              }, 3000);
-            });
-        } catch (error) {
-          this.$store.commit("setMessage", "メモの削除に失敗しました");
-          this.$store.commit("setIsSuccess", false);
-          this.$store.commit("setIsShow", true);
-          setTimeout(() => {
-            this.$store.commit("setMessage", "");
-            this.$store.commit("setIsShow", false);
-            this.$store.commit("setIsSuccess", null);
-            location.reload();
-          }, 3000);
-        }
-      }
-    },
+    // async deleteMemo(memoId: number) {
+    //   if (confirm("選択したメモを削除します")) {
+    //     try {
+    //       this.$axios.post("/memo/deleteMemo", memoId)
+    //       .then((response: any) => {
+    //         const message = response.data.message;
+    //         this.$store.commit("setMessage", message);
+    //         this.$store.commit("setIsSuccess", true);
+    //         this.$store.commit("setIsShow", true);
+    //         setTimeout(() => {
+    //           this.$store.commit("setMessage", "");
+    //           this.$store.commit("setIsShow", false);
+    //           this.$store.commit("setIsSuccess", null);
+    //           location.reload();
+    //         }, 3000);
+    //       });
+    //     } catch (error) {
+    //       this.$store.commit("setMessage", "メモの削除に失敗しました");
+    //       this.$store.commit("setIsSuccess", false);
+    //       this.$store.commit("setIsShow", true);
+    //       setTimeout(() => {
+    //         this.$store.commit("setMessage", "");
+    //         this.$store.commit("setIsShow", false);
+    //         this.$store.commit("setIsSuccess", null);
+    //         location.reload();
+    //       }, 3000);
+    //     }
+    //   }
+    // },
     editMemo(memo_id: number) {
       this.$router.push(`/memo/${memo_id}`);
     },
